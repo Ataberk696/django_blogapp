@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+
+
+{% block title %}Homepage|{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid mt-3">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-3">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="{{blog.image.url}}" class="img-fluid">                           
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">             
+                                <h5 class="card-title">
+                                    {{blog.title}}
+                                </h5>
+                                <p class="card-text">{{blog.description|safe}}</p>
+                                <br>
+                                <p class="h5 float-end me-4">Yazar: {{ blog.author.username }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+

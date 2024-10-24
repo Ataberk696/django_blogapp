@@ -1,0 +1,18 @@
+# Django-specific
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+
+# Ignore virtual environment folders
+venv/
+env/
+.env
+
+# Ignore Django migrations
+**/migrations/
+
+# Ignore static files
+staticfiles/
+*.static/
