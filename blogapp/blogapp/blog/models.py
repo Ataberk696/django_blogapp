@@ -25,7 +25,7 @@ class Blog(models.Model):
     is_active = models.BooleanField(default=False)
     slug = models.SlugField(null=False, blank=True, unique=True, db_index=True, editable=False)
     category = models.ForeignKey(Category, default=1, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # Varsayılan olarak admin ID'si 1
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=1) 
 
     def __str__(self):
         return f"{self.title}"

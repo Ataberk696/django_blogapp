@@ -10,17 +10,14 @@
 {% block content %}
 
 <div class="container-fluid mt-3">
-    {% include 'partials/msg.html' %}
+    
     <div class="col">
         <h1>Login</h1>
         <hr>
         <form method="POST">
             {% csrf_token %}
-            {% if error %}
-                <div class="alert alert-danger">
-                    {{error}}
-                </div>
-            {% endif %}
+            {% include 'partials/msg.html' %}
+
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" name="username">

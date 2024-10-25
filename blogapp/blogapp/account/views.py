@@ -2,8 +2,10 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from blogapp.decorators import authenticated_redirect
+from django.contrib import messages
 
 # Create your views here.
+
 
 @authenticated_redirect
 def login_request(request):
@@ -11,18 +13,43 @@ def login_request(request):
         username = request.POST["username"]
         password = request.POST["password"]
 
-        user = authenticate(request, username = username, password = password)
-
-        if user is not None:
-            login(request, user)
-            return redirect("home")
-        else:
-            return render(request,"account/login.html", {
-                "error": "username ya da parola yanlış"
-            })
-
+        try:
+            user = User.objects.get(username=username)
+            if user.check_password(password):
+                if not user.is_active:
+                    messages.info(request, "Giriş yapmak için adminin onaylamasını bekleyiniz.")
+                    return redirect('login')
+                
+                login(request, user) 
+                return redirect("home")
+            else:
+                messages.error(request, "Kullanıcı adı ya da parola yanlış")
+        except User.DoesNotExist:
+            messages.error(request, "Böyle bir kullanıcı bulunmamaktadır.")
 
     return render(request, "account/login.html")
+
+
+# @authenticated_redirect
+# def login_request(request):
+#     if request.method == "POST":
+#         username = request.POST["username"]
+#         password = request.POST["password"]
+
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             if not user.is_active:
+#                 messages.info(request, "Giriş yapmak için adminin onaylamasını bekleyiniz.")
+#                 return redirect('login')
+
+#             login(request, user)
+#             return redirect("home")
+#         else:
+#             messages.info(request, "Kullanıcı adı ya da parola yanlış veya adminin onayı lazım.")
+#             return render(request, "account/login.html", {"username": username})
+
+#     return render(request, "account/login.html")
+
 
 @authenticated_redirect
 def register_request(request):

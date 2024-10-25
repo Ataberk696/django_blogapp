@@ -38,6 +38,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'blog',
     'account',
+    'admin_panel',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,6 +61,13 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'blogapp.urls'
 
 from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+    messages.WARNING: 'warning',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+}
 
 TEMPLATES = [
     {
@@ -128,7 +136,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS =[     #bunu yaoarak static dosyalarını proje seviyesinde açmış oluyoruz.
+STATICFILES_DIRS =[     #bunu yaparak static dosyalarını proje seviyesinde açmış oluyoruz.
     BASE_DIR / "static"
 ]
 

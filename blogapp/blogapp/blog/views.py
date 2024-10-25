@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import BlogForm
-from django.http import HttpResponse
 from blog.models import Blog, Category
+from django.contrib.auth import authenticate, login
 from blogapp.decorators import login_required
 from django.contrib import messages
 
