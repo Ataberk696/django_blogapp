@@ -12,8 +12,8 @@
         <div class="col-md-9">
             <h1>All Blogs</h1>
             <hr>
-            {% if blogs|length > 0 %}
-                {% for blog in blogs %}
+            {% if page_obj|length > 0 %}
+                {% for blog in page_obj %}
                     {% if blog.is_active %}
                         {% include 'blog/partials/_blog.html'%}
                     {% endif %}
@@ -24,5 +24,30 @@
         </div>
 
     </div>
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="First">&laquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Önceki</a>
+                </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Sonraki</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">&raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
 {% endblock  %}

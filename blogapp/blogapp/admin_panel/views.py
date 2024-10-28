@@ -3,30 +3,35 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from blog.models import Blog
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 from blogapp.decorators import superuser_required
 
 @login_required
 @superuser_required
-@user_passes_test(superuser_required)
 def manage_users(request):
-    users = User.objects.all()
-    return render(request, 'admin_panel/manage_users.html', {'users': users})
+    users_list = User.objects.all() 
+    paginator = Paginator(users_list, 5)  
+    page_number = request.GET.get('page')  # sayfa numarasını al
+    page_obj = paginator.get_page(page_number)  # Sayfayı al
+
+    return render(request, 'admin_panel/manage_users.html', {'page_obj': page_obj}) 
 
 
 @login_required
 @superuser_required
-@user_passes_test(superuser_required)
 def manage_blogs(request):
     blogs = Blog.objects.all()
-    return render(request, 'admin_panel/manage_blogs.html', {'blogs': blogs})
+    paginator = Paginator(blogs, 5) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'admin_panel/manage_blogs.html', {'page_obj': page_obj})
 
 
 
 
 @login_required
 @superuser_required
-@user_passes_test(superuser_required)
 def approve_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.is_active = True
@@ -36,7 +41,6 @@ def approve_user(request, user_id):
 
 @login_required
 @superuser_required
-@user_passes_test(superuser_required)
 def inactive_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     user.is_active = False
@@ -48,7 +52,6 @@ def inactive_user(request, user_id):
 
 @login_required
 @superuser_required
-@user_passes_test(superuser_required)
 def approve_blog(request, blog_id):
     blog = get_object_or_404(Blog, id=blog_id)
     blog.is_active = True
@@ -58,7 +61,6 @@ def approve_blog(request, blog_id):
 
 @login_required
 @superuser_required
-@user_passes_test(superuser_required)
 def inactive_blog(request, blog_id):
     blog = get_object_or_404(Blog, id=blog_id)
     blog.is_active = False
@@ -66,3 +68,4 @@ def inactive_blog(request, blog_id):
     messages.warning(request, f"{blog.title} inaktif edildi.")
     return redirect('admin_panel:manage_blogs')
 
+#@user_passes_test(superuser_required) -- django içinde bulunan superuser decoratoru, kendim yazmak yerine bunu da kullanabilirsin.

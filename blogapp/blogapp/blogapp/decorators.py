@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import redirect
+from blog.models import Blog
 from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
 
 def login_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
@@ -27,6 +29,28 @@ def superuser_required(view_func):
             messages.error(request, "Bu sayfaya yalnızca yönetici erişebilir.")
             return redirect('home') 
     return _wrapped_view
+
+def blog_is_active_required(view_func):
+    def _wrapped_view(request, *args, **kwargs):
+        blog_slug = kwargs.get("slug")
+        blog = get_object_or_404(Blog, slug=blog_slug)
+
+        if not blog.is_active and not request.user.is_superuser:
+            messages.info(request, "Bu blog admin tarafından henüz onaylanmadı.")
+            return redirect("home") 
+        return view_func(request, *args, **kwargs)
+        
+    return _wrapped_view
+
+
+# def blog_is_active_required(view_func):
+#     def _wrapped_view(request, *args, **kwargs):
+#         blog = kwargs.get('blog')
+#         if not blog.is_active and not request.user.is_superuser:
+#             messages.info(request, "Bu blog henüz onaylanmadı. Admin onayı bekleniyor.")
+#             return redirect('home')       
+#         return view_func(request, *args, **kwargs)
+#     return _wrapped_view
 
 # def admin_required(view_func):
 #     def _wrapped_view(request, *args, **kwargs):
