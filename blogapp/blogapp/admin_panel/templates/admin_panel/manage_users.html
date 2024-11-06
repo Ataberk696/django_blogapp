@@ -1,7 +1,9 @@
 {% extends 'admin_base.html' %}
 
 {% block title %}Admin-Panel{% endblock %}
+
 {% block css_files %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <style>
         body {
             background-color: #343a40; 
@@ -45,6 +47,7 @@
 {% include 'partials/msg.html' %}
 
 <div class="container-fluid mt-5 row">
+    
     <div class="col-md-3 list-group">  
         <a href="{% url 'home' %}" class="list-group-item list-group-item-action">Ana Sayfa</a>
         <a href="{% url 'admin_panel:manage_blogs' %}" class="list-group-item list-group-item-action">Blog Yönetimi</a>
@@ -56,66 +59,157 @@
                 <h2>Kullanıcı Yönetimi</h2>
             </div>
         </div>
-        <table class="table table-striped table-hover table-bordered">
+        <table id="usersTable" class="table table-dark table-striped table-hover table-bordered">
             <thead>
                 <tr>
+                    <th><input type="checkbox" id="selectAll"></th>
+                    <th>ID</th>
                     <th>Kullanıcı Adı</th>
                     <th>Email</th>
                     <th>Durum</th>
                     <th>İşlemler</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for user in page_obj %}
-                    <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>
-                            {% if user.is_active %}
-                                Aktif
-                            {% else %}
-                                Pasif
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if not user.is_active %}
-                                <a href="{% url 'admin_panel:approve_user' user.id %}" class="btn btn-sm btn-success" data-toggle="tooltip" title="Blogu onaylayın"><i class="fas fa-check"></i> Onayla</a>
-                            {% endif %}
-                            {% if user.is_active %}
-                                <a href="{% url 'admin_panel:inactive_user' user.id %}" class="btn btn-sm btn-danger" data-toggle="tooltip" title="İnaktif edin"><i class="fas fa-ban"></i> İnaktif Et</a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
         </table>
-
-        <!-- Sayfalandırma için -->
-        <nav>
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1" aria-label="First">&laquo;</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Önceki</a>
-                    </li>
-                {% endif %}
-                {% for num in page_obj.paginator.page_range %}
-                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                    </li>
-                {% endfor %}
-                {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Sonraki</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">&raquo;</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
     </div>
 </div>
 {% endblock %}
+
+{% block js_files %}
+<script>
+    $('#selectAll').on('click', function() {
+        var isChecked = $(this).prop('checked');
+        $('#usersTable tbody input[type="checkbox"]').prop('checked', isChecked);
+    });
+    function loadUsers() {
+        $.ajax({
+            url: "{% url 'admin_panel:ajax_manage_users' %}",
+            type: "GET",
+            success: function(response) {
+                var usersTable = $('#usersTable').DataTable();
+                usersTable.clear();
+
+                response.forEach(function(user) {
+                    var status = user.is_active ? 'Aktif' : 'Pasif';
+                    var actions = user.is_active
+                        ? `<button onclick="deactivateUser(${user.id})" class="btn btn-danger btn-sm">Deaktive Et</button>`
+                        : `<button onclick="activateUser(${user.id})" class="btn btn-success btn-sm">Aktif Et</button>`;
+
+                    var row = [
+                        `<input type="checkbox" class="userCheckbox" data-user-id="${user.id}">`,
+                        user.id,
+                        user.username,
+                        user.email,
+                        status,
+                        actions
+                    ];
+
+                    usersTable.row.add(row);
+                });
+
+                usersTable.draw();
+            },
+            error: function() {
+                console.error("Kullanıcı verileri yüklenemedi.");
+            }
+        });
+    }
+
+    loadUsers();
+
+    function activateUser(userId) {
+        $.ajax({
+            url: "{% url 'admin_panel:activate_user' %}",
+            type: "POST",
+            data: {
+                'id': userId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function() {
+                loadUsers(); 
+            },
+            error: function() {
+                console.error("Kullanıcı aktif hale getirilemedi.");
+            }
+        });
+    }
+
+    function deactivateUser(userId) {
+        $.ajax({
+            url: "{% url 'admin_panel:deactivate_user' %}",
+            type: "POST",
+            data: {
+                'id': userId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function() {
+                loadUsers(); 
+            },
+            error: function() {
+                console.error("Kullanıcı pasif hale getirilemedi.");
+            }
+        });
+    }
+</script>
+{% endblock %}
+
+
+<!-- <td>
+    {% if not user.is_active %}
+        <a href="{% url 'admin_panel:approve_user' user.id %}" class="btn btn-sm btn-success" data-toggle="tooltip" title="Blogu onaylayın"><i class="fas fa-check"></i> Onayla</a>
+    {% endif %}
+    {% if user.is_active %}
+        <a href="{% url 'admin_panel:inactive_user' user.id %}" class="btn btn-sm btn-danger" data-toggle="tooltip" title="İnaktif edin"><i class="fas fa-ban"></i> İnaktif Et</a>
+    {% endif %}
+</td> -->
+
+
+<!--
+datatable kullandığımız için bu kısmı kaldırdık.
+<nav>
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="First">&laquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Önceki</a>
+            </li>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Sonraki</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">&raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav> -->
+
+
+<!-- <div>
+    <button id="ajaxTestButton">AJAX Testi Yap</button>
+    <p id="ajaxTestResult"></p>
+
+<script>
+    document.getElementById("ajaxTestButton").addEventListener("click", function() {
+        $.ajax({
+            url: "{% url 'ajax_test' %}",
+            type: "GET",
+            success: function(response) {
+                document.getElementById("ajaxTestResult").innerText = response.message;
+            },
+            error: function(xhr, status, error) {
+                document.getElementById("ajaxTestResult").innerText = "AJAX isteği başarısız!";
+            }
+        });
+    });
+</script>
+
+</div> -->

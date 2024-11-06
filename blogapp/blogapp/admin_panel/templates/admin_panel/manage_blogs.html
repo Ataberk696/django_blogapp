@@ -1,7 +1,9 @@
 {% extends 'admin_base.html' %}
 
 {% block title %}Admin-Panel{% endblock %}
+
 {% block css_files %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <style>
         body {
             background-color: #343a40; 
@@ -43,11 +45,11 @@
             border-color: #dc3545;
         }
         .pagination .page-item .page-link {
-        background-color: #495057; 
-        color: #ffffff;
-        border: none;
+            background-color: #495057; 
+            color: #ffffff;
+            border: none;
         }
-       
+
         .pagination .page-item.active .page-link {
             background-color: #6c757d; 
             color: #ffffff;
@@ -59,6 +61,7 @@
         }
     </style>
 {% endblock %}
+
 {% block content %}
 <div class="container-fluid mt-5 row">
     {% include 'partials/msg.html' %}
@@ -73,69 +76,124 @@
                 <h2>Blog Yönetimi</h2>
             </div>
         </div>
-        <table class="table table-dark table-striped table-hover table-bordered ">
+        <table id="blogsTable" class="table table-dark table-striped table-hover table-bordered">
             <thead>
                 <tr>
+                    <th><input type="checkbox" id="selectAll"></th>
+                    <th>ID</th>
                     <th>Başlık</th>
-                    <th>Yazar</th>
                     <th>Durum</th>
                     <th>İşlemler</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for blog in page_obj %}
-                    <tr>
-                        <td>{{ blog.title }}</td>
-                        <td>{{ blog.author.username }}</td>
-                        <td>
-                            {% if blog.is_active %}
-                                Aktif
-                            {% else %}
-                                Pasif
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            {% if not blog.is_active %}
-                                <a href="{% url 'admin_panel:approve_blog' blog.id %}" class="btn btn-sm btn-success">
-                                    <i class="fas fa-check"></i> Onayla
-                                </a>                    
-                            {% endif %}
-                            {% if  blog.is_active %}
-                                <a href="{% url 'admin_panel:inactive_blog' blog.id %}" class="btn btn-sm btn-danger">
-                                    <i class="fas fa-ban"></i> İnaktif Et
-                                </a>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
         </table>
-        <nav>
-            <ul class="pagination">
-                {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1" aria-label="First">&laquo;</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Önceki</a>
-                    </li>
-                {% endif %}
-                {% for num in page_obj.paginator.page_range %}
-                    <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                    </li>
-                {% endfor %}
-                {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Sonraki</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">&raquo;</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
     </div>
 </div>
 {% endblock %}
+
+{% block js_files %}
+<script>
+    $('#selectAll').on('click', function() {
+        var is_checked = $(this).prop('checked');
+        $('#blogsTable tbody input[type="checkbox"]').prop('checked', is_checked);
+    })
+    function loadBlogs() {
+        $.ajax({
+            url: "{% url 'admin_panel:ajax_manage_blogs' %}",
+            type: "GET",
+            success: function(response) {
+                var blogsTable = $('#blogsTable').DataTable();
+                blogsTable.clear();
+
+                response.forEach(function(blog) {
+                    var status = blog.is_active ? 'Aktif' : 'Pasif';
+                    var actions = blog.is_active
+                        ? `<button onclick="deactivateBlog(${blog.id})" class="btn btn-danger btn-sm">Deaktive Et</button>`
+                        : `<button onclick="activateBlog(${blog.id})" class="btn btn-success btn-sm">Aktif Et</button>`;
+
+                    var row = [
+                        `<input type="checkbox" class="blogCheckbox" data-blog-id="${blog.id}">`,
+                        blog.id,
+                        blog.title,
+                        status,
+                        actions
+                    ];
+
+                    blogsTable.row.add(row);
+                });
+                blogsTable.draw();
+            },
+            error: function() {
+                console.error("Blog verileri yüklenemedi.");
+            }
+        });
+    }
+
+    loadBlogs();
+
+    function activateBlog(blogId) {
+        $.ajax({
+            url: "{% url 'admin_panel:activate_blog' %}",
+            type: "POST",
+            data: {
+                'id': blogId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function() {
+                loadBlogs(); 
+            },
+            error: function() {
+                console.error("Blog aktif hale getirilemedi.");
+            }
+        });
+    }
+
+    function deactivateBlog(blogId) {
+        $.ajax({
+            url: "{% url 'admin_panel:deactivate_blog' %}",
+            type: "POST",
+            data: {
+                'id': blogId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function() {
+                loadBlogs(); 
+            },
+            error: function() {
+                console.error("Blog pasif hale getirilemedi.");
+            }
+        });
+    }
+</script>
+{% endblock %}
+
+
+
+
+<!-- 
+datatable kullandığımız için bu kısmı kaldırdık.
+<nav>
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="First">&laquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Önceki</a>
+            </li>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Sonraki</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">&raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav> -->

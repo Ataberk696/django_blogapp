@@ -10,10 +10,10 @@
             <div class="card shadow-sm p-4">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <!-- Django Form -->
+                    
                     {{ form.as_p }}
 
-                    <!-- Form butonu -->
+                    
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn btn-outline-primary">Blog Ekle</button>
                     </div>

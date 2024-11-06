@@ -4,6 +4,13 @@ from blog.models import Blog, Category
 from blogapp.decorators import login_required , blog_is_active_required
 from django.contrib import messages
 from django.core.paginator import Paginator
+# from django.http import JsonResponse
+# from django.views.decorators.http import require_GET
+
+# @require_GET
+# def ajax_test_view(request):
+#     data = {'message': 'AJAX çalışıyor!'}
+#     return JsonResponse(data)
 
 # Create your views here.
 
