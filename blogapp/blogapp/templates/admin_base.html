@@ -33,26 +33,6 @@
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            if ($('#usersTable').length) {
-                $('#usersTable').DataTable({
-                    "paging": true,
-                    "searching": true,
-                    "ordering": true,
-                    "pageLength": 5,
-                });
-            }
-            if ($('#blogsTable').length) {
-                $('#blogsTable').DataTable({
-                    "paging": true,
-                    "searching": true,
-                    "ordering": true,
-                    "pageLength": 5,
-                });
-            }
-        });
-    </script>
     {% block js_files %}{% endblock %}
 </body>
 </html>

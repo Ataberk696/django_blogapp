@@ -9,40 +9,42 @@ from django.views.decorators.csrf import csrf_exempt
 # from django.views.decorators.http import require_GET
 from blogapp.decorators import superuser_required
 
-
-@csrf_exempt
-def activate_user(request):
+def update_status(request):
     if request.method == "POST":
-        user_id = request.POST.get("id")
-        user = get_object_or_404(User, id=user_id)
-        user.is_active = True
-        user.save()
-        return JsonResponse({"status": "success"})
-    return JsonResponse({"status": "error"})
+        item_ids = request.POST.getlist('ids[]')  # ids[] ile gelen listeyi alıyoruz
+        item_type = request.POST.get('type')
+        action = request.POST.get('action')
 
+        print(f"Gelen istek - item_type: {item_type}, action: {action}, ids: {item_ids}")
 
-@csrf_exempt
-def deactivate_user(request):
-    if request.method == "POST":
-        user_id = request.POST.get("id")
-        user = get_object_or_404(User, id=user_id)
-        user.is_active = False
-        user.save()
-        return JsonResponse({"status": "success"})
-    return JsonResponse({"status": "error"})
+        if item_type == 'user':
+            try:
+                users = User.objects.filter(id__in=item_ids)  
+                is_active_status = True if action == 'activate' else False
+                
+                for user in users:
+                    user.is_active = is_active_status
+                    user.save()
 
+                return JsonResponse({'success': True, 'message': f"Kullanıcılar {action} edildi"})
+            except User.DoesNotExist:
+                return JsonResponse({'success': False, 'message': "Kullanıcılar bulunamadı"})
 
-def activate_blog(request):
-    if request.method == "POST":
-        blog_id = request.POST.get("id")
-        Blog.objects.filter(id=blog_id).update(is_active=True)
-        return JsonResponse({"success": True})
+        elif item_type == 'blog':
+            try:
+                blogs = Blog.objects.filter(id__in=item_ids)  
+                is_active_status = True if action == 'activate' else False
+                
+                for blog in blogs:
+                    blog.is_active = is_active_status
+                    blog.save()
 
-def deactivate_blog(request):
-    if request.method == "POST":
-        blog_id = request.POST.get("id")
-        Blog.objects.filter(id=blog_id).update(is_active=False)
-        return JsonResponse({"success": True})
+                return JsonResponse({'success': True, 'message': f"Bloglar {action} edildi"})
+            except Blog.DoesNotExist:
+                return JsonResponse({'success': False, 'message': "Bloglar bulunamadı"})
+
+    return JsonResponse({'success': False, 'message': "Geçersiz istek"})
+
     
 def ajax_manage_users(request):
     users = User.objects.all().values('id', 'username', 'email', 'is_active')  

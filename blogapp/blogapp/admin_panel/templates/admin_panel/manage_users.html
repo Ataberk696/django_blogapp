@@ -1,4 +1,5 @@
 {% extends 'admin_base.html' %}
+{% load static %}
 
 {% block title %}Admin-Panel{% endblock %}
 
@@ -18,6 +19,10 @@
         .table thead th {
             background-color: #6c757d; 
             color: white; 
+        }
+
+        .table tbody tr.selected {
+            background-color: #d1ecf1;  
         }
 
         .list-group-item {
@@ -40,6 +45,7 @@
             background-color: #dc3545; 
             border-color: #dc3545;
         }
+
     </style>
 {% endblock %}
 
@@ -55,8 +61,15 @@
     </div>
     <div class="col-md-9">
         <div class="row align-items-center">
-            <div class="col">
+            <div class="col d-flex justify-content-between">
                 <h2>Kullanıcı Yönetimi</h2>
+                <div>
+                    <select id="actionSelect">
+                        <option value="activate">Activate</option>
+                        <option value="deactivate">Deactivate</option>
+                    </select>
+                    <button id="applyButton" class="btn btn-primary my-3">Uygula</button>
+                </div>
             </div>
         </div>
         <table id="usersTable" class="table table-dark table-striped table-hover table-bordered">
@@ -76,17 +89,148 @@
 {% endblock %}
 
 {% block js_files %}
+
 <script>
+    const updateStatusUrl = "{% url 'admin_panel:update_status' %}";
+    const csrfToken = '{{ csrf_token }}';
+
     $('#selectAll').on('click', function() {
-        var isChecked = $(this).prop('checked');
-        $('#usersTable tbody input[type="checkbox"]').prop('checked', isChecked);
+        var is_checked = $(this).prop('checked');
+        $('#usersTable tbody input[type="checkbox"]').prop('checked', is_checked);
+        if (is_checked) {
+            $('#usersTable tbody tr').addClass('selected');
+        } else {
+            $('#usersTable tbody tr').removeClass('selected');
+        }
     });
+
+    $('#applyButton').on('click', function() {
+        const selectedUserIds = [];
+        
+        $('#usersTable tbody input[type="checkbox"]:checked').each(function() {
+            selectedUserIds.push($(this).data('user-id'));
+        });
+        
+        if (selectedUserIds.length === 0) {
+            showAlert('warning', 'Lütfen en az bir user seçin.');
+            return;
+        }
+
+        const action = $('#actionSelect').val();  
+
+        $.ajax({
+            url: updateStatusUrl,
+            type: 'POST',
+            data: {
+                'ids[]': selectedUserIds,
+                'type': 'user', 
+                'action': action,  
+                'csrfmiddlewaretoken': csrfToken
+            },
+            success: function(response) {
+                if (response.success) {
+                    loadUsers(); 
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('danger', response.message);
+                }
+            },
+            error: function() {
+                showAlert('danger', 'Toplu durum güncellenirken bir hata oluştu.');
+            }
+        });
+    });
+
+    let usersTable;
+
+    $(document).ready(function() {
+        usersTable = $('#usersTable').DataTable({
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Turkish.json"
+            }
+        });
+        
+        loadUsers();
+
+        $('#usersTable tbody').on('click','tr', function(){
+            var checkbox = $(this).find('input[type="checkbox"]');
+            checkbox.prop('checked', !checkbox.prop('checked'));
+            $(this).toggleClass('selected');
+        });
+    });
+
+    function updateStatus(itemId, itemType, action) {
+        $('.alert').remove();
+        
+        $.ajax({
+            url: updateStatusUrl,
+            type: "POST",
+            data: {
+                'id': itemId,
+                'type': itemType,
+                'action': action,
+                'csrfmiddlewaretoken': csrfToken
+            },
+            success: function(response) {
+                if (response.success) {
+                    const rows = usersTable.rows().nodes();
+                    $(rows).each(function() {
+                        const rowId = $(this).find('input[type="checkbox"]').data('user-id');
+                        if (rowId == itemId) {
+                            const row = usersTable.row(this);
+                            const rowData = row.data();
+                            
+                            const newStatus = action === 'activate' ? 'Aktif' : 'Pasif';
+                            const newButton = action === 'activate' 
+                                ? `<button onclick="deactivateUser(${itemId})" class="btn btn-danger btn-sm">Deaktive Et</button>`
+                                : `<button onclick="activateUser(${itemId})" class="btn btn-success btn-sm">Aktif Et</button>`;
+                            
+                            rowData[4] = newStatus;  
+                            rowData[5] = newButton;  
+                            
+                            row.data(rowData).draw(false);
+                            
+                            return false; 
+                        }
+                    });
+
+                    showAlert('success', response.message);
+                } else {
+                    showAlert('danger', response.message);
+                }
+            },
+            error: function() {
+                showAlert('danger', 'Durum güncellenirken bir hata oluştu.');
+            }
+        });
+    }
+
+    function showAlert(type, message) {
+        $('.alert').remove();
+        
+        const alertHTML = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        `;
+        
+        $('.col-md-3').prepend(alertHTML);
+        
+        setTimeout(() => {
+            $('.alert').fadeOut('slow', function() {
+                $(this).remove();
+            });
+        }, 3000);
+    }
+
     function loadUsers() {
         $.ajax({
             url: "{% url 'admin_panel:ajax_manage_users' %}",
             type: "GET",
             success: function(response) {
-                var usersTable = $('#usersTable').DataTable();
                 usersTable.clear();
 
                 response.forEach(function(user) {
@@ -110,46 +254,19 @@
                 usersTable.draw();
             },
             error: function() {
-                console.error("Kullanıcı verileri yüklenemedi.");
+                showAlert('danger', 'Kullanıcı verileri yüklenemedi.');
             }
         });
     }
-
-    loadUsers();
-
-    function activateUser(userId) {
-        $.ajax({
-            url: "{% url 'admin_panel:activate_user' %}",
-            type: "POST",
-            data: {
-                'id': userId,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function() {
-                loadUsers(); 
-            },
-            error: function() {
-                console.error("Kullanıcı aktif hale getirilemedi.");
-            }
-        });
+   
+    function activateUser(userId, event) {
+        updateStatus(userId, 'user', 'activate');
     }
 
-    function deactivateUser(userId) {
-        $.ajax({
-            url: "{% url 'admin_panel:deactivate_user' %}",
-            type: "POST",
-            data: {
-                'id': userId,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-            },
-            success: function() {
-                loadUsers(); 
-            },
-            error: function() {
-                console.error("Kullanıcı pasif hale getirilemedi.");
-            }
-        });
+    function deactivateUser(userId, event) {
+        updateStatus(userId, 'user', 'deactivate');
     }
+
 </script>
 {% endblock %}
 
