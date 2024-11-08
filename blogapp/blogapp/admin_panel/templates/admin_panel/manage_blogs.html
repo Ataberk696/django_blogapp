@@ -121,12 +121,11 @@
             url: updateStatusUrl,
             type: 'POST',
             data: {
-                'ids[]': selectedBlogIds,
+                'ids': selectedBlogIds,
                 'type': 'blog', 
                 'action': action,  
                 'csrfmiddlewaretoken': csrfToken
             },
-            traditional: true,
             success: function(response) {
                 if (response.success) {
                     loadBlogs(); 
@@ -163,41 +162,46 @@
 
     function updateStatus(itemId, itemType, action) {
         console.log(`updateStatus called with: itemId=${itemId}, itemType=${itemType}, action=${action}`);
-        debugger;
+
 
         $.ajax({
             url: updateStatusUrl,
             type: 'POST',
             data: {
-                'id': itemId,
+                'ids[]': itemId,
                 'type': itemType,
                 'action': action,
                 'csrfmiddlewaretoken': csrfToken
             },
             success: function(response) {
-                console.log('AJAX success callback:', response);
                 if (response.success) {
-                    // Güncellenen satırın verilerini güncelle
-                    const row = blogsTable.row(`[data-blog-id="${itemId}"]`);
-                    const rowData = row.data();
-                    
-                    const newStatus = action === 'activate' ? 'Aktif' : 'Pasif';
-                    const newButton = action === 'activate' 
-                        ? `<button onclick="deactivateBlog(${itemId})" class="btn btn-danger btn-sm">Deaktive Et</button>`
-                        : `<button onclick="activateBlog(${itemId})" class="btn btn-success btn-sm">Aktif Et</button>`;
-                    
-                    rowData[3] = newStatus; 
-                    rowData[4] = newButton;                       
-
-                    row.data(rowData).draw(false);
-                    
+                    const rows = blogsTable.rows().nodes();
+                    $(rows).each(function() {
+                        const rowId = $(this).find('input[type="checkbox"]').data('blog-id');
+                        if (rowId == itemId) {
+                            const row = blogsTable.row(this);
+                            const rowData = row.data();
+                            
+                            const newStatus = action === 'activate' ? 'Aktif' : 'Pasif';
+                            const newButton = action === 'activate' 
+                                ? `<button onclick="deactivateBlog(${itemId})" class="btn btn-danger btn-sm">Deaktive Et</button>`
+                                : `<button onclick="activateBlog(${itemId})" class="btn btn-success btn-sm">Aktif Et</button>`;
+                            
+                            rowData[3] = newStatus;  
+                            rowData[4] = newButton;  
+                            
+                            row.data(rowData).draw(false);
+                            
+                            return false; 
+                        }
+                    });
+                        
                     showAlert('success', response.message);
                 } else {
                     showAlert('danger', response.message);
                 }
             },
-            error: function(xhr, status, error) {
-                console.log('AJAX error callback:', xhr, status, error);
+            error: function() {
                 showAlert('danger', 'Durum güncellenirken bir hata oluştu.');
             }
         });

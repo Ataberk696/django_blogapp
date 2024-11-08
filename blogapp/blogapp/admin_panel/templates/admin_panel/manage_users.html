@@ -166,7 +166,7 @@
             url: updateStatusUrl,
             type: "POST",
             data: {
-                'id': itemId,
+                'ids[]': itemId,
                 'type': itemType,
                 'action': action,
                 'csrfmiddlewaretoken': csrfToken
@@ -193,7 +193,7 @@
                             return false; 
                         }
                     });
-
+                    
                     showAlert('success', response.message);
                 } else {
                     showAlert('danger', response.message);

@@ -11,11 +11,11 @@ from blogapp.decorators import superuser_required
 
 def update_status(request):
     if request.method == "POST":
-        item_ids = request.POST.getlist('ids[]')  # ids[] ile gelen listeyi alıyoruz
+        item_ids = request.POST.getlist('ids[]')  
         item_type = request.POST.get('type')
         action = request.POST.get('action')
 
-        print(f"Gelen istek - item_type: {item_type}, action: {action}, ids: {item_ids}")
+        # print(f"Gelen istek - item_type: {item_type}, action: {action}, ids: {item_ids}")
 
         if item_type == 'user':
             try:
