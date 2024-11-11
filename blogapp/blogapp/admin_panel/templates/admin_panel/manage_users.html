@@ -147,6 +147,9 @@
         usersTable = $('#usersTable').DataTable({
             language: {
                 url: "//cdn.datatables.net/plug-ins/1.10.21/i18n/Turkish.json"
+            },
+            "createdRow": function(row, data, dataIndex) {
+                $(row).attr('id', 'row-' + data[1]);
             }
         });
         
@@ -160,6 +163,7 @@
     });
 
     function updateStatus(itemId, itemType, action) {
+        console.log(`updateStatus called with: itemId=${itemId}, itemType=${itemType}, action=${action}`);
         $('.alert').remove();
         
         $.ajax({
@@ -171,39 +175,53 @@
                 'action': action,
                 'csrfmiddlewaretoken': csrfToken
             },
-            success: function(response) {
+            success: function(response){
                 if (response.success) {
-                    const rows = usersTable.rows().nodes();
-                    $(rows).each(function() {
-                        const rowId = $(this).find('input[type="checkbox"]').data('user-id');
-                        if (rowId == itemId) {
-                            const row = usersTable.row(this);
-                            const rowData = row.data();
-                            
-                            const newStatus = action === 'activate' ? 'Aktif' : 'Pasif';
-                            const newButton = action === 'activate' 
-                                ? `<button onclick="deactivateUser(${itemId})" class="btn btn-danger btn-sm">Deaktive Et</button>`
-                                : `<button onclick="activateUser(${itemId})" class="btn btn-success btn-sm">Aktif Et</button>`;
-                            
-                            rowData[4] = newStatus;  
-                            rowData[5] = newButton;  
-                            
-                            row.data(rowData).draw(false);
-                            
-                            return false; 
-                        }
-                    });
-                    
-                    showAlert('success', response.message);
+                    const rowSelector = `#row-${itemId}`;
+                    const row = usersTable.row(rowSelector);
+
+                    if(row.length){
+                        const rowData = row.data();
+                        const newStatus = action === 'activate' ? 'Aktif' : 'Pasif';
+                        const newButton = action === 'activate' 
+                            ? `<button onclick="deactivateUser(${itemId})" class="btn btn-danger btn-sm">Deaktive Et</button>`
+                            : `<button onclick="activateUser(${itemId})" class="btn btn-success btn-sm">Aktif Et</button>`;
+                        
+                        rowData[4] = newStatus;
+                        rowData[5] = newButton;
+                        
+                        row.data(rowData).draw(false);
+                    }
+
+                    showAlert('success',  response.message);
                 } else {
                     showAlert('danger', response.message);
                 }
             },
-            error: function() {
-                showAlert('danger', 'Durum güncellenirken bir hata oluştu.');
+            error:function(){
+                showAlert('danger', 'durum güncellenirken bir hata oluştur.')
             }
         });
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     function showAlert(type, message) {
         $('.alert').remove();
