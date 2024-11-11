@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,16 +19,32 @@
     <title> {% block title %}{% endblock %}Blogapp</title>
 </head>
 <body>
-<nav class="navbar navbar-custom">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'home' %}">
-            <img src="{% static 'img/blogapp_logo.jpg.png' %}" alt="Logo" width="45" height="40" class="d-inline-block align-text-top">
-            Blogapp
-        </a>
+<nav class="navbar navbar-custom w-100">
+    <div class="container-fluid p-0">
+        <div class="d-flex justify-content-between align-items-center w-100">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'img/blogapp_logo.jpg.png' %}" alt="Logo" width="45" height="40" class="d-inline-block align-text-top">
+                Blogapp
+            </a>
+            <div class="me-3">
+                <form action="{% url 'set_language' %}" method="post">
+                    {% csrf_token %}
+                    <select name="language" onchange="this.form.submit()">
+                        {% get_current_language as LANGUAGE_CODE %}
+                        {% get_available_languages as LANGUAGES %}
+                        {% for lang in LANGUAGES %}
+                            <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>
+                                {{ lang.1 }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </div>        
     </div>
 </nav>
+    
     {% block content %}{% endblock %}
-
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>

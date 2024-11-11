@@ -1,6 +1,6 @@
 from django.contrib import admin
-from. models import Blog, Category
-
+from .models import Blog, Category
+from modeltranslation.admin import TranslationAdmin
 
 class BlogAdmin(admin.ModelAdmin):
     list_display = ("title","is_active","category_name",)
@@ -12,7 +12,11 @@ class BlogAdmin(admin.ModelAdmin):
     def category_name(self, obj):
         return obj.category.name
 
+class CategoryAdmin(TranslationAdmin): 
+    list_display = ('name',)
+
+
 admin.site.register(Blog,BlogAdmin)
-admin.site.register(Category)
+admin.site.register(Category, CategoryAdmin)
 
 # Register your models here.

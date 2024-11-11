@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=150)
+    name = models.CharField(max_length=150, verbose_name=_("Name"))
     slug = models.SlugField(null=False, blank=True, unique=True,db_index=True, editable=False)
 
     def __str__(self):
@@ -23,7 +23,7 @@ class Category(models.Model):
 from django.contrib.auth.models import User
 
 class Blog(models.Model):
-    title = models.CharField(max_length=200, verbose_name=_("Title"))
+    title = models.CharField(max_length=200)
     image = models.ImageField(upload_to="blogs", null=True, blank=True)
     description = RichTextField()
     is_active = models.BooleanField(default=False)

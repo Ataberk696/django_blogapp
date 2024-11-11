@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-11 14:47+0300\n"
+"POT-Creation-Date: 2024-11-11 17:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -101,13 +101,25 @@ msgstr "Status"
 msgid "İşlemler"
 msgstr "Operation"
 
+#: .\blog\forms.py:10
+msgid "Title"
+msgstr "Title"
+
+#: .\blog\forms.py:11
+msgid "Description"
+msgstr "Description"
+
+#: .\blog\forms.py:12
+msgid "Image"
+msgstr "Image"
+
+#: .\blog\models.py:8
+msgid "Name"
+msgstr "Name"
+
 #: .\blog\models.py:19
 msgid "Categories"
 msgstr "Categories"
-
-#: .\blog\models.py:26
-msgid "Title"
-msgstr "Title"
 
 #: .\blog\templates\blog\add_blog.html:7
 msgid "Yeni Blog"
@@ -134,13 +146,27 @@ msgstr "Previous"
 msgid "Sonraki"
 msgstr "Next"
 
+#: .\blog\templates\blog\index.html:21
+msgid "Homepage"
+msgstr "Homepage"
+
 #: .\templates\partials\_navbar.html:14
 msgid "Bloglar"
 msgstr "Blogs"
 
+#: .\templates\partials\_navbar.html:20
+#, fuzzy
+#| msgid "admin_panel/"
+msgid "Admin Panel"
+msgstr "admin_panel/"
+
 #: .\templates\partials\_navbar.html:23
 msgid "Çıkış Yap"
 msgstr "Exit"
+
+#: .\templates\partials\_navbar.html:26
+msgid "Welcome"
+msgstr "Welcome"
 
 #: .\templates\partials\_navbar.html:33
 msgid "Kayıt ol"
@@ -151,6 +177,3 @@ msgstr "Register"
 
 #~ msgid "account/"
 #~ msgstr "account/"
-
-#~ msgid "admin_panel/"
-#~ msgstr "admin_panel/"
