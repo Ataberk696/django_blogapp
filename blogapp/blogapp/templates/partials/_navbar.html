@@ -1,3 +1,4 @@
+{% load i18n %}
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'home' %}">Blogapp</a>
@@ -7,10 +8,10 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-3">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">{% trans "Anasayfa" %}</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'blogs' %}">Blogs</a>
+            <a class="nav-link" href="{% url 'blogs' %}">{% trans "Bloglar" %}</a>
           </li>
         </ul>
         <ul class="navbar-nav me mb-2 mb-lg-0 gap-3">
@@ -19,17 +20,17 @@
             <li class="nav-item active"><a href="{% url 'admin_panel:manage_users' %}" class="nav-link">Admin Paneli</a></li>
               {% endif %}      
             <li class="nav-item active">
-              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+              <a class="nav-link" href="{% url 'logout' %}">{% trans "Çıkış Yap" %}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="">Welcome, {{ user.username }}</a>
             </li>
           {% else %}
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Login</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'login' %}">{% trans "Giriş Yap" %}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'register' %}">Register</a>
+              <a class="nav-link" href="{% url 'register' %}">{% trans "Kayıt ol" %}</a>
             </li>
           {% endif %}
         </ul>

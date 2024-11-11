@@ -1,0 +1,156 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-11-11 14:47+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\account\templates\account\login.html:15
+#: .\templates\partials\_navbar.html:30
+msgid "Giriş Yap"
+msgstr "Login"
+
+#: .\account\templates\account\login.html:22
+#: .\account\templates\account\register.html:23
+#: .\admin_panel\templates\admin_panel\manage_users.html:81
+msgid "Kullanıcı Adı"
+msgstr "Username"
+
+#: .\account\templates\account\login.html:26
+#: .\account\templates\account\register.html:42
+msgid "Şifre"
+msgstr "Password"
+
+#: .\account\templates\account\register.html:13
+msgid "Kayıt Ol"
+msgstr "Register"
+
+#: .\account\templates\account\register.html:27
+msgid "E-posta"
+msgstr "E-mail"
+
+#: .\account\templates\account\register.html:32
+msgid "Ad"
+msgstr "Name"
+
+#: .\account\templates\account\register.html:36
+msgid "Soyad"
+msgstr "Surname"
+
+#: .\account\templates\account\register.html:46
+msgid "Şifre Tekrar Yazın"
+msgstr "Re-Password"
+
+#: .\admin_panel\templates\admin_panel\manage_blogs.html:60
+#: .\admin_panel\templates\admin_panel\manage_users.html:59
+#: .\templates\partials\_navbar.html:11
+msgid "Anasayfa"
+msgstr "Home"
+
+#: .\admin_panel\templates\admin_panel\manage_blogs.html:61
+#: .\admin_panel\templates\admin_panel\manage_blogs.html:67
+#: .\admin_panel\templates\admin_panel\manage_users.html:60
+msgid "Blog Yönetimi"
+msgstr "Manage Blog"
+
+#: .\admin_panel\templates\admin_panel\manage_blogs.html:62
+#: .\admin_panel\templates\admin_panel\manage_users.html:61
+#: .\admin_panel\templates\admin_panel\manage_users.html:66
+msgid "Kullanıcı Yönetimi"
+msgstr "Manage User"
+
+#: .\admin_panel\templates\admin_panel\manage_blogs.html:70
+#: .\admin_panel\templates\admin_panel\manage_users.html:69
+msgid "Aktif Et"
+msgstr "Activate"
+
+#: .\admin_panel\templates\admin_panel\manage_blogs.html:71
+#: .\admin_panel\templates\admin_panel\manage_users.html:70
+msgid "İnaktif Et"
+msgstr "Deactivate"
+
+#: .\admin_panel\templates\admin_panel\manage_blogs.html:73
+#: .\admin_panel\templates\admin_panel\manage_users.html:72
+msgid "Uygula"
+msgstr "Apply"
+
+#: .\admin_panel\templates\admin_panel\manage_blogs.html:82
+msgid "Başlık"
+msgstr "Title"
+
+#: .\admin_panel\templates\admin_panel\manage_blogs.html:83
+#: .\admin_panel\templates\admin_panel\manage_users.html:83
+msgid "Durum"
+msgstr "Status"
+
+#: .\admin_panel\templates\admin_panel\manage_blogs.html:84
+#: .\admin_panel\templates\admin_panel\manage_users.html:84
+msgid "İşlemler"
+msgstr "Operation"
+
+#: .\blog\models.py:19
+msgid "Categories"
+msgstr "Categories"
+
+#: .\blog\models.py:26
+msgid "Title"
+msgstr "Title"
+
+#: .\blog\templates\blog\add_blog.html:7
+msgid "Yeni Blog"
+msgstr "New Blog"
+
+#: .\blog\templates\blog\add_blog.html:18
+#: .\templates\partials\_categories.html:17
+msgid "Blog Ekle"
+msgstr "Add Blog"
+
+#: .\blog\templates\blog\blog-details.html:28
+msgid "Yazar"
+msgstr "Author"
+
+#: .\blog\templates\blog\blogs.html:23
+msgid "Blog Bulunamadı"
+msgstr "Blog Not Found"
+
+#: .\blog\templates\blog\blogs.html:35
+msgid "Önceki"
+msgstr "Previous"
+
+#: .\blog\templates\blog\blogs.html:45
+msgid "Sonraki"
+msgstr "Next"
+
+#: .\templates\partials\_navbar.html:14
+msgid "Bloglar"
+msgstr "Blogs"
+
+#: .\templates\partials\_navbar.html:23
+msgid "Çıkış Yap"
+msgstr "Exit"
+
+#: .\templates\partials\_navbar.html:33
+msgid "Kayıt ol"
+msgstr "Register"
+
+#~ msgid "admin/"
+#~ msgstr "admin/"
+
+#~ msgid "account/"
+#~ msgstr "account/"
+
+#~ msgid "admin_panel/"
+#~ msgstr "admin_panel/"

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 
 {% block title  %}Blogs|{% endblock  %}
@@ -19,7 +20,7 @@
                     {% endif %}
                 {% endfor %}
             {% else %}
-                <div class="alert alert-warning">No Blogs</div>
+                <div class="alert alert-warning">{% trans "Blog Bulunamadı" %}</div>
             {% endif %}
         </div>
 
@@ -31,7 +32,7 @@
                     <a class="page-link" href="?page=1" aria-label="First">&laquo;</a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Önceki</a>
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Önceki" %}</a>
                 </li>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
@@ -41,7 +42,7 @@
             {% endfor %}
             {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Sonraki</a>
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Sonraki" %}</a>
                 </li>
                 <li class="page-item">
                     <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">&raquo;</a>

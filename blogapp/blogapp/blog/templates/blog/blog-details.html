@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load i18n %}
 
 
 
@@ -24,7 +25,7 @@
                                 </h5>
                                 <p class="card-text">{{blog.description|safe}}</p>
                                 <br>
-                                <p class="h5 float-end me-4">Yazar: {{ blog.author.username }}</p>
+                                <p class="h5 float-end me-4">{% trans "Yazar" %}: {{ blog.author.username }}</p>
                             </div>
                         </div>
                     </div>

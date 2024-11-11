@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from ckeditor.fields import RichTextField
+from django.utils.translation import gettext_lazy as _
 
 
 class Category(models.Model):
@@ -14,12 +15,15 @@ class Category(models.Model):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = _("Categories")
+
 
 
 from django.contrib.auth.models import User
 
 class Blog(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, verbose_name=_("Title"))
     image = models.ImageField(upload_to="blogs", null=True, blank=True)
     description = RichTextField()
     is_active = models.BooleanField(default=False)

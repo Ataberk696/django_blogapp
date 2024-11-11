@@ -1,5 +1,6 @@
 {% extends 'admin_base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block title %}Admin-Panel{% endblock %}
 
@@ -56,20 +57,20 @@
 <div class="container-fluid mt-5 row">
     {% include 'partials/msg.html' %}
     <div class="col-md-3 list-group">  
-        <a href="{% url 'home' %}" class="list-group-item list-group-item-action">Ana Sayfa</a>
-        <a href="{% url 'admin_panel:manage_blogs' %}" class="list-group-item list-group-item-action">Blog Yönetimi</a>
-        <a href="{% url 'admin_panel:manage_users' %}" class="list-group-item list-group-item-action">Kullanıcı Yönetimi</a>
+        <a href="{% url 'home' %}" class="list-group-item list-group-item-action">{% trans "Anasayfa" %}</a>
+        <a href="{% url 'admin_panel:manage_blogs' %}" class="list-group-item list-group-item-action">{% trans "Blog Yönetimi" %}</a>
+        <a href="{% url 'admin_panel:manage_users' %}" class="list-group-item list-group-item-action">{% trans "Kullanıcı Yönetimi" %}</a>
     </div>
     <div class="col-md-9">
         <div class="row align-items-center">
             <div class="col d-flex justify-content-between">
-                <h2>Blog Yönetimi</h2>
+                <h2>{% trans "Blog Yönetimi" %}</h2>
                 <div>
                     <select id="actionSelect">
-                        <option value="activate">Activate</option>
-                        <option value="deactivate">Deactivate</option>
+                        <option value="activate">{% trans "Aktif Et" %}</option>
+                        <option value="deactivate">{% trans "İnaktif Et" %}</option>
                     </select>
-                    <button id="applyButton" class="btn btn-primary my-3">Uygula</button>
+                    <button id="applyButton" class="btn btn-primary my-3">{% trans "Uygula" %}</button>
                 </div>
             </div>
         </div>
@@ -78,9 +79,9 @@
                 <tr>
                     <th><input type="checkbox" id="selectAll"></th>
                     <th>ID</th>
-                    <th>Başlık</th>
-                    <th>Durum</th>
-                    <th>İşlemler</th>
+                    <th>{% trans "Başlık" %}</th>
+                    <th>{% trans "Durum" %}</th>
+                    <th>{% trans "İşlemler" %}</th>
                 </tr>
             </thead>
         </table>
@@ -205,7 +206,8 @@
             }
         });
     }
-   function showAlert(type, message) {
+   
+    function showAlert(type, message) {
         $('.alert').remove();
 
         const alertHtml = `

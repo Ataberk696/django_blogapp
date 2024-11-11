@@ -12,18 +12,18 @@
 <div class="container-fluid mt-3">
     
     <div class="col">
-        <h1>Login</h1>
+        <h1>{% trans "Giriş Yap" %}</h1>
         <hr>
         <form method="POST">
             {% csrf_token %}
             {% include 'partials/msg.html' %}
 
             <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
+                <label for="username" class="form-label">{% trans "Kullanıcı Adı" %}</label>
                 <input type="text" class="form-control" name="username">
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
+                <label for="password" class="form-label">{% trans "Şifre" %}</label>
                 <input type="password" class="form-control" name="password">
             </div>
             <div class="mb-3"></div>

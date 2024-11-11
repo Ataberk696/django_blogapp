@@ -18,11 +18,32 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls import i18n
+
+
 
 
 urlpatterns = [
+    path('i18n/', include('django.conf.urls.i18n')),
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
     path('account/', include('account.urls')),
     path('admin_panel/', include('admin_panel.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+
+
+
+
+
+
+# urlpatterns += i18n_patterns(
+#     path(_('admin/'), admin.site.urls),
+#     path('', include('blog.urls')), 
+#     path(_('account/'), include('account.urls')), 
+#     path(_('admin_panel/'), include('admin_panel.urls')),  
+# ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

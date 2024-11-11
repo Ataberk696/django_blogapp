@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% load static  %}
+{% load i18n %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Yeni Blog </h2>
+    <h2 class="text-center mb-4">{% trans "Yeni Blog" %}</h2>
 
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -12,10 +13,9 @@
                     {% csrf_token %}
                     
                     {{ form.as_p }}
-
                     
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn btn-outline-primary">Blog Ekle</button>
+                        <button type="submit" class="btn btn-outline-primary">{% trans "Blog Ekle" %}</button>
                     </div>
                 </form>
             </div>
