@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import BlogForm
-from blog.models import Blog, Category
 from blogapp.decorators import login_required , blog_is_active_required
+from .forms import BlogForm,  CommentForm
+from blog.models import Blog, Category
 from django.contrib import messages
 from django.core.paginator import Paginator
+from .models import Blog, Category, Comment
+
 # from django.http import JsonResponse
 # from django.views.decorators.http import require_GET
 
@@ -37,11 +39,27 @@ def blog(request):
 @login_required
 @blog_is_active_required
 def blog_details(request, slug):
-    blog = Blog.objects.get(slug=slug)
-    #blog = get_object_or_404(Blog, slug=slug)
-    return render(request, "blog/blog-details.html", {
-        'blog': blog
-    })
+    blog = get_object_or_404(Blog, slug=slug)
+    comments = blog.comments.all()
+    
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.blog = blog
+            comment.author = request.user
+            comment.save()
+            return redirect('blog_details', slug=blog.slug)
+    else:
+        comment_form = CommentForm()
+    
+    context = {
+        'blog': blog,
+        'comments': comments,
+        'comment_form': comment_form
+    }
+    return render(request, "blog/blog-details.html", context)
+
 
 @login_required
 def blogs_by_category(request, slug):

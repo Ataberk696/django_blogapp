@@ -6,4 +6,3 @@ from .models import Blog
 class CategoryTranslationOptions(TranslationOptions):
     fields = ('name',) 
 
-

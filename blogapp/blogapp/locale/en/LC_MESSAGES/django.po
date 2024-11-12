@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-11 17:23+0300\n"
+"POT-Creation-Date: 2024-11-12 09:55+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,8 +110,30 @@ msgid "Description"
 msgstr "Description"
 
 #: .\blog\forms.py:12
+#, fuzzy
+#| msgid "Categories"
+msgid "Category"
+msgstr "Categories"
+
+#: .\blog\forms.py:13
 msgid "Image"
 msgstr "Image"
+
+#: .\blog\forms.py:16
+msgid "Enter the title of the blog."
+msgstr "Enter the title of the blog."
+
+#: .\blog\forms.py:17
+msgid "Provide a detailed description of the blog."
+msgstr "Provide a detailed description of the blog."
+
+#: .\blog\forms.py:18
+msgid "Select a category for the blog."
+msgstr "Select a category for the blog."
+
+#: .\blog\forms.py:19
+msgid "Upload an image for the blog."
+msgstr "Upload an image for the blog."
 
 #: .\blog\models.py:8
 msgid "Name"
@@ -125,7 +147,7 @@ msgstr "Categories"
 msgid "Yeni Blog"
 msgstr "New Blog"
 
-#: .\blog\templates\blog\add_blog.html:18
+#: .\blog\templates\blog\add_blog.html:16
 #: .\templates\partials\_categories.html:17
 msgid "Blog Ekle"
 msgstr "Add Blog"

@@ -40,6 +40,20 @@ class Blog(models.Model):
 
 
 
+class Comment(models.Model):
+    blog = models.ForeignKey(Blog, on_delete= models.CASCADE, related_name="comments")
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.author.username} - {self.blog.title}"
+
+
+
+
+
+
     #Slug alanları aynı gelirse bunu kullanabilirim. 
     # def save(self, *args, **kwargs):
     #     if not self.slug:
