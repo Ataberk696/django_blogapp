@@ -32,5 +32,15 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['content']
         widgets = {
-             'content': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Yorumunuzu buraya yazın...'})
+            'content': forms.Textarea(attrs={
+                'rows': 6,
+                'cols': 80,  
+                'placeholder': _('Yorumunuzu buraya yazın...'),
+                'class': 'form-control',  
+                'style': 'width: 100%; resize: vertical;' 
+            })
+        }
+
+        labels = {
+            'content' : ''
         }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-12 09:55+0300\n"
+"POT-Creation-Date: 2024-11-13 10:08+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,18 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\account\templates\account\login.html:15
+#: .\account\templates\account\login.html:16
 #: .\templates\partials\_navbar.html:30
 msgid "Giriş Yap"
 msgstr "Login"
 
-#: .\account\templates\account\login.html:22
+#: .\account\templates\account\login.html:23
 #: .\account\templates\account\register.html:23
 #: .\admin_panel\templates\admin_panel\manage_users.html:81
 msgid "Kullanıcı Adı"
 msgstr "Username"
 
-#: .\account\templates\account\login.html:26
+#: .\account\templates\account\login.html:27
 #: .\account\templates\account\register.html:42
 msgid "Şifre"
 msgstr "Password"
@@ -135,6 +135,10 @@ msgstr "Select a category for the blog."
 msgid "Upload an image for the blog."
 msgstr "Upload an image for the blog."
 
+#: .\blog\forms.py:38
+msgid "Yorumunuzu buraya yazın..."
+msgstr "Write your comment here..."
+
 #: .\blog\models.py:8
 msgid "Name"
 msgstr "Name"
@@ -152,9 +156,25 @@ msgstr "New Blog"
 msgid "Blog Ekle"
 msgstr "Add Blog"
 
-#: .\blog\templates\blog\blog-details.html:28
-msgid "Yazar"
-msgstr "Author"
+#: .\blog\templates\blog\blog-details.html:47
+msgid "Yazar:"
+msgstr "Author:"
+
+#: .\blog\templates\blog\blog-details.html:53
+msgid "Yorumlar"
+msgstr "Comments"
+
+#: .\blog\templates\blog\blog-details.html:58
+msgid "Yorum Yap"
+msgstr "Leave a comment"
+
+#: .\blog\templates\blog\blog-details.html:62
+msgid "Yorum Ekle"
+msgstr "Add Comment"
+
+#: .\blog\templates\blog\blog-details.html:82
+msgid "Henüz yorum yapılmamış."
+msgstr "No comments yet."
 
 #: .\blog\templates\blog\blogs.html:23
 msgid "Blog Bulunamadı"
