@@ -1,0 +1,32 @@
+{% load i18n %}
+
+<div class="comments-list mt-4">
+    {% for comment in page_obj %}
+        <div class="comment-item border rounded p-3 mb-3">
+            <div class="comment-header d-flex justify-content-between">
+                <strong>{{ comment.author.username }}</strong>
+                <small class="text-muted">{{ comment.created_at|date:"d M Y H:i" }}</small>
+            </div>
+            <div class="comment-content mt-2">
+                <p>{{ comment.content|safe }}</p>
+            </div>
+        </div>
+    {% empty %} 
+        <p class="text-muted">{% blocktrans %}Henüz yorum yapılmamış{% endblocktrans %}</p>
+    {% endfor %}
+</div>
+
+<div class="pagination d-flex justify-content-center align-items-center mt-3">
+    {% if page_obj.has_previous %}
+        <a href="#" data-page="{{ page_obj.previous_page_number }}" class="ajax-pagination page-link">{% blocktrans %}« Önceki{% endblocktrans %}</a> 
+    {% endif %}
+    
+    <span class="current page-number mx-2">
+        {% trans "Sayfa" %} {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+    </span>
+    
+    {% if page_obj.has_next %}
+        <a href="#" data-page="{{ page_obj.next_page_number }}" class="ajax-pagination page-link">{% blocktrans %}Sonraki »{% endblocktrans %}</a>
+    {% endif %}
+</div>
+

@@ -4,6 +4,8 @@ from .forms import BlogForm,  CommentForm
 from blog.models import Blog, Category
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 from .models import Blog, Category, Comment
 
 # from django.http import JsonResponse
@@ -16,12 +18,24 @@ from .models import Blog, Category, Comment
 
 # Create your views here.
 
+
 def index(request):
     context = {
         "blogs": Blog.objects.filter(is_active=True),
         "categories": Category.objects.all()
     }
     return render(request, "blog/index.html", context)
+
+def comments_view(request, slug):
+    blog = get_object_or_404(Blog, slug=slug)
+    comments = blog.comments.all()
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(comments, 5)  
+    page_obj = paginator.get_page(page_number)
+    
+    
+    comments_html = render_to_string('blog/partials/comments_list.html', {'page_obj': page_obj})
+    return JsonResponse({'comments': comments_html})
 
 @login_required
 def blog(request):
@@ -40,8 +54,13 @@ def blog(request):
 @blog_is_active_required
 def blog_details(request, slug):
     blog = get_object_or_404(Blog, slug=slug)
-    comments = blog.comments.all()
+    comments = blog.comments.all().order_by('-created_at')
     
+    #pagination işlemi 
+    paginator = Paginator(comments, 5)  # Sayfada gösterilecek yorum sayısı
+    page_number = request.GET.get('page')  # Sayfa numarasını alıyoruz
+    page_obj = paginator.get_page(page_number)
+
     if request.method == 'POST':
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
@@ -52,10 +71,11 @@ def blog_details(request, slug):
             return redirect('blog_details', slug=blog.slug)
     else:
         comment_form = CommentForm()
-    
+
     context = {
         'blog': blog,
         'comments': comments,
+        'page_obj': page_obj,
         'comment_form': comment_form
     }
     return render(request, "blog/blog-details.html", context)

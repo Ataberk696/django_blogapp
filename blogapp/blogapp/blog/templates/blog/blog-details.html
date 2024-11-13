@@ -6,25 +6,68 @@
 
 {% block css_files %}
     <style>
-    .comment-form {
-    border: 1px solid #ddd;
-    }
+        .comment-form {
+            border: 1px solid #ddd;
+            padding: 1em;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+        }
 
-    .comments-list .comment-item {
-        border-left: 4px solid #007bff;
-        background-color: #f9f9f9;
-    }
+        .comments-list .comment-item {
+            border-left: 4px solid #007bff;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
 
-    .comment-header {
-        font-size: 0.9em;
-        color: #555;
-    }
+        .comments-list .comment-item:hover {
+            transform: translateY(-3px);
+        }
 
-    .comment-content p {
-        margin: 0;
-        font-size: 0.95em;
-    }
+        .comment-header {
+            font-size: 0.9em;
+            color: #555;
+            font-weight: bold;
+        }
 
+        .comment-header .text-muted {
+            font-size: 0.8em;
+        }
+
+        .comment-content p {
+            margin: 0;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 10px;
+            font-size: 1em;
+            margin-top: 1em;
+        }
+
+        .pagination .page-link {
+            padding: 0.5em 1em;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #0056b3;
+        }
+
+        .pagination .current {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .page-number {
+            font-size: 0.95em;
+        }
     </style>
 {% endblock %}
 
@@ -67,27 +110,47 @@
                     {% endif %}
             
                     <!-- Yorumlar -->
-                    <div class="comments-list mt-4">
-                        {% for comment in comments %}
-                            <div class="comment-item border rounded p-3 mb-3">
-                                <div class="comment-header d-flex justify-content-between">
-                                    <strong>{{ comment.author.username }}</strong>
-                                    <small class="text-muted">{{ comment.created_at|date:"d M Y H:i" }}</small>
-                                </div>
-                                <div class="comment-content mt-2">
-                                    <p>{{ comment.content }}</p>
-                                </div>
-                            </div>
-                        {% empty %}
-                            <p class="text-muted">{% trans "Henüz yorum yapılmamış." %}</p>
-                        {% endfor %}
-                    </div>
+                    <div id="comments-list">    
+                        {% include 'blog/partials/comments_list.html' %}
+                    </div>   
                 </div>
             </div>            
         </div>
     </div>
 </div>
 {% endblock %}
+
+{% block js_files %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const commentsContainer = document.getElementById('comments-list');
+
+            // Sayfa bağlantılarına tıklama işlemi
+            commentsContainer.addEventListener('click', function (event) {
+                if (event.target.classList.contains('ajax-pagination')) {
+                    event.preventDefault();
+                    const page = event.target.getAttribute('data-page');
+                    const url = `{% url 'comments' slug=blog.slug %}?page=${page}`;
+
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        commentsContainer.innerHTML = data.comments;
+                    })
+                    .catch(error => {
+                        console.error('Yorumlar yüklenirken hata oluştu:', error);
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
 
 
 

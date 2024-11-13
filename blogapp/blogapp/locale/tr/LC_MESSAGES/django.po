@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-13 10:08+0300\n"
+"POT-Creation-Date: 2024-11-13 15:59+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,44 +19,44 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: .\account\templates\account\login.html:16
-#: .\templates\partials\_navbar.html:30
+#: .\templates\partials\_navbar.html:52
 msgid "Giriş Yap"
 msgstr "Giriş Yap"
 
 #: .\account\templates\account\login.html:23
-#: .\account\templates\account\register.html:23
+#: .\account\templates\account\register.html:24
 #: .\admin_panel\templates\admin_panel\manage_users.html:81
 msgid "Kullanıcı Adı"
 msgstr "Kullanıcı Adı"
 
 #: .\account\templates\account\login.html:27
-#: .\account\templates\account\register.html:42
+#: .\account\templates\account\register.html:43
 msgid "Şifre"
 msgstr "Şifre"
 
-#: .\account\templates\account\register.html:13
+#: .\account\templates\account\register.html:14
 msgid "Kayıt Ol"
 msgstr "Kayıt Ol"
 
-#: .\account\templates\account\register.html:27
+#: .\account\templates\account\register.html:28
 msgid "E-posta"
 msgstr "E-posta"
 
-#: .\account\templates\account\register.html:32
+#: .\account\templates\account\register.html:33
 msgid "Ad"
 msgstr "Ad"
 
-#: .\account\templates\account\register.html:36
+#: .\account\templates\account\register.html:37
 msgid "Soyad"
 msgstr "Soyad"
 
-#: .\account\templates\account\register.html:46
+#: .\account\templates\account\register.html:47
 msgid "Şifre Tekrar Yazın"
 msgstr "Şifre Tekrar Yazın"
 
 #: .\admin_panel\templates\admin_panel\manage_blogs.html:60
 #: .\admin_panel\templates\admin_panel\manage_users.html:59
-#: .\templates\partials\_navbar.html:11
+#: .\templates\partials\_navbar.html:33
 msgid "Anasayfa"
 msgstr "Anasayfa"
 
@@ -156,37 +156,31 @@ msgstr "Yeni Blog"
 msgid "Blog Ekle"
 msgstr "Blog Ekle"
 
-#: .\blog\templates\blog\blog-details.html:47
-#, fuzzy
-#| msgid "Yazar"
+#: .\blog\templates\blog\blog-details.html:90
 msgid "Yazar:"
 msgstr "Yazar:"
 
-#: .\blog\templates\blog\blog-details.html:53
+#: .\blog\templates\blog\blog-details.html:96
 msgid "Yorumlar"
 msgstr "Yorumlar"
 
-#: .\blog\templates\blog\blog-details.html:58
+#: .\blog\templates\blog\blog-details.html:101
 msgid "Yorum Yap"
 msgstr "Yorum Yap"
 
-#: .\blog\templates\blog\blog-details.html:62
+#: .\blog\templates\blog\blog-details.html:105
 msgid "Yorum Ekle"
 msgstr "Yorum Ekle"
-
-#: .\blog\templates\blog\blog-details.html:82
-msgid "Henüz yorum yapılmamış."
-msgstr "Henüz yorum yapılmamış."
 
 #: .\blog\templates\blog\blogs.html:23
 msgid "Blog Bulunamadı"
 msgstr "Blog Bulunamadı"
 
-#: .\blog\templates\blog\blogs.html:35
+#: .\blog\templates\blog\blogs.html:34
 msgid "Önceki"
 msgstr "Önceki"
 
-#: .\blog\templates\blog\blogs.html:45
+#: .\blog\templates\blog\blogs.html:44
 msgid "Sonraki"
 msgstr "Sonraki"
 
@@ -194,25 +188,39 @@ msgstr "Sonraki"
 msgid "Homepage"
 msgstr "Anasayfa"
 
-#: .\templates\partials\_navbar.html:14
+#: .\blog\templates\blog\partials\comments_list.html:15
+msgid "Henüz yorum yapılmamış"
+msgstr "Henüz yorum yapılmamış."
+
+#: .\blog\templates\blog\partials\comments_list.html:21
+msgid "« Önceki"
+msgstr "Önceki"
+
+#: .\blog\templates\blog\partials\comments_list.html:25
+msgid "Sayfa"
+msgstr "Sayfa"
+
+#: .\blog\templates\blog\partials\comments_list.html:29
+msgid "Sonraki »"
+msgstr "Sonraki"
+
+#: .\templates\partials\_navbar.html:36
 msgid "Bloglar"
 msgstr "Bloglar"
 
-#: .\templates\partials\_navbar.html:20
-#, fuzzy
-#| msgid "admin_panel/"
+#: .\templates\partials\_navbar.html:42
 msgid "Admin Panel"
-msgstr "admin_panel/"
+msgstr "Admin Panel"
 
-#: .\templates\partials\_navbar.html:23
+#: .\templates\partials\_navbar.html:45
 msgid "Çıkış Yap"
 msgstr "Çıkış Yap"
 
-#: .\templates\partials\_navbar.html:26
+#: .\templates\partials\_navbar.html:48
 msgid "Welcome"
 msgstr "Hoş geldiniz"
 
-#: .\templates\partials\_navbar.html:33
+#: .\templates\partials\_navbar.html:55
 msgid "Kayıt ol"
 msgstr "Kayıt ol"
 

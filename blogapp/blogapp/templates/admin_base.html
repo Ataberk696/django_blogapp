@@ -10,10 +10,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
     <style>
+        ul {
+            list-style: none;
+        }
         .navbar-custom {
             background-color: #553285 !important;
             color: white; 
         }
+        .styled-select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            color: #333;
+            font-size: 14px;
+            outline: none;
+            appearance: none; /* Tarayıcı varsayılan okunu kaldırır */
+        }
+
+        .styled-select:hover {
+            background-color: #f1f1f1;
+            border-color: #aaa;
+        }
+        
     </style>
     {% block css_files %}{% endblock %}
     <title> {% block title %}{% endblock %}Blogapp</title>
@@ -27,18 +46,22 @@
                 Blogapp
             </a>
             <div class="me-3">
-                <form action="{% url 'set_language' %}" method="post">
-                    {% csrf_token %}
-                    <select name="language" onchange="this.form.submit()">
-                        {% get_current_language as LANGUAGE_CODE %}
-                        {% get_available_languages as LANGUAGES %}
-                        {% for lang in LANGUAGES %}
-                            <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>
-                                {{ lang.1 }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </form>
+                <ul>
+                    <li class="nav-item">
+                        <form action="{% url 'set_language' %}" method="post" style="display:inline-block;">
+                            {% csrf_token %}
+                            <select name="language" onchange="this.form.submit()" class="styled-select">
+                                {% get_current_language as LANGUAGE_CODE %}
+                                {% get_available_languages as LANGUAGES %}
+                                {% for lang in LANGUAGES %}
+                                    <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>
+                                        {{ lang.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </li>
+                </ul>
             </div>
         </div>        
     </div>

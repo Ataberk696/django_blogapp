@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     # path('ajax-test/', views.ajax_test_view, name='ajax_test'),
+    path('blogs/<slug:slug>/comments/', views.comments_view, name='comments'),
     path("", views.index, name='home'),
     path("index", views.index),
     path("blogs", views.blog, name='blogs'),
