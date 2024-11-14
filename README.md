@@ -67,6 +67,6 @@ Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları t
 
 
 
-Projeye katkıda bulunmak isteyenler, lütfen pull request gönderin veya issue açın. Katkılarınız için teşekkür ederiz!
+Projeye katkıda bulunmak isteyenler, lütfen pull request gönderin veya issue açın. Katkılarınız için şimdiden teşekkürler. 
 
 
