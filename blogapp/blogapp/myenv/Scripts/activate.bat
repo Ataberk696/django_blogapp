@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\atabe\Desktop\Django_Task\blogapp\myenv
+set VIRTUAL_ENV=C:\Users\atabe\Desktop\Django_Task_Kopya\blogapp\blogapp\myenv
 
 if not defined PROMPT set PROMPT=$P$G
 
