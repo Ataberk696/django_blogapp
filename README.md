@@ -25,43 +25,45 @@ Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları t
 
 1. **Projeyi Klonlayın:**
 
-   ```bash
-   git clone https://github.com/kullanici/blog-projesi.git
-   cd blog-projesi
-   
+      ```bash
+      git clone https://github.com/kullanici/blog-projesi.git
+      cd blog-projesi
+      ```
+      
 2. **Sanal Ortam Oluşturun ve Aktif Edin:**
    
-  ```bash
-  python -m venv venv
-  source venv/bin/activate  # MacOS/Linux
-  .\venv\Scripts\activate  # Windows,
-  ```
+     ```bash
+     python -m venv venv
+     source venv/bin/activate  # MacOS/Linux
+     .\venv\Scripts\activate  # Windows,
+     ```
 
 3. **Bağımlılıkları Yükleyin ve Ortam Değişkenlerini Ayarlayın:**
 
-  ```bash
-  pip install -r requirements.txt
-  cp .env.example .env
-  ```
+     ```bash
+     pip install -r requirements.txt
+     cp .env.example .env
+     ```
+
   Ardından, .env dosyasındaki SECRET_KEY değerini kendi ortamınıza uygun şekilde düzenleyin.
 
 4. **Veritabanını Oluşturun ve Migrasyonları Çalıştırın:**
 
-   ```bash
-   python manage.py migrate
-   ```
+      ```bash
+      python manage.py migrate
+      ```
 
 5. **Admin Paneli için Süper Kullanıcı Oluşturun:**
 
-   ```bash
-   python manage.py createsuperuser
-   ```
+      ```bash
+      python manage.py createsuperuser
+      ```
  
 6. **Uygulamayı Başlatın:**
 
-  ```bash
-   python manage.py runserver
-   ```
+     ```bash
+      python manage.py runserver
+      ```
 
 
 
