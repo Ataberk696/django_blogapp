@@ -9,6 +9,7 @@ db.sqlite3
 venv/
 env/
 .env
+myenv
 
 # Ignore Django migrations
 **/migrations/
