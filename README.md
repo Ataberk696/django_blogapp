@@ -45,7 +45,7 @@ Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları t
      cp .env.example .env
      ```
 
-  Ardından, .env dosyasındaki SECRET_KEY değerini kendi ortamınıza uygun şekilde düzenleyin.
+    Ardından, .env dosyasındaki SECRET_KEY değerini kendi ortamınıza uygun şekilde düzenleyin.
 
 4. **Veritabanını Oluşturun ve Migrasyonları Çalıştırın:**
 
