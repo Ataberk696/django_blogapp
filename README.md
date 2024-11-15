@@ -26,7 +26,7 @@ Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları t
 1. **Projeyi Klonlayın:**
 
       ```bash
-      git clone https://github.com/kullanici/blog-projesi.git
+      git clone https://github.com/Ataberk696/django_blogapp
       cd blog-projesi
       ```
       
@@ -67,6 +67,6 @@ Projeyi kendi bilgisayarınızda çalıştırmak için aşağıdaki adımları t
 
 
 
-Projeye katkıda bulunmak isteyenler, lütfen pull request gönderin veya issue açın. Katkılarınız için teşekkür ederiz!
+Projeye katkıda bulunmak isteyenler, lütfen pull request gönderin veya issue açın. Katkılarınız için şimdiden teşekkürler. 
 
 
