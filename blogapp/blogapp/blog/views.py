@@ -40,7 +40,7 @@ def comments_view(request, slug):
 @login_required
 def blog(request):
     blogs_list = Blog.objects.filter(is_active=True)  
-    paginator = Paginator(blogs_list, 5)  
+    paginator = Paginator(blogs_list, 200)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -82,20 +82,32 @@ def blog_details(request, slug):
 
 
 @login_required
-def blogs_by_category(request, slug):
-    category = get_object_or_404(Category, slug=slug)
-    blogs = Blog.objects.filter(is_active=True, category=category)
-    
-    paginator = Paginator(blogs, 5)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+def filter_blogs(request):
+    blogs = Blog.objects.all()
 
-    context = {
-        "page_obj": page_obj,
-        "categories": Category.objects.all(),
-        "selected_category": slug
-    }
-    return render(request, "blog/blogs.html", context)
+    selected_categories = request.GET.getlist('categories[]')
+
+    if selected_categories:
+        if isinstance(selected_categories[0], str) and ',' in selected_categories[0]:
+            selected_categories = selected_categories[0].split(',')
+        
+        selected_categories = [int(category_id) for category_id in selected_categories if category_id.isdigit()]
+
+        if selected_categories:
+            blogs = blogs.filter(category__id__in=selected_categories)
+
+    elif not selected_categories:
+        blogs = Blog.objects.all()
+
+    # HTML içeriğini render et ve JSON ile döndür
+    html = render_to_string('blog/partials/_blog.html', {'blogs': blogs}, request=request)
+    return JsonResponse({'html': html})
+
+
+
+
+
+
 
 
 @login_required

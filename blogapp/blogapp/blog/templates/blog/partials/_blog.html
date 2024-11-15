@@ -1,10 +1,10 @@
 {% load static %}
 
+{% for blog in blogs %}
 <div class="card mb-3 position-relative">
     <div class="position-absolute top-0 end-0 p-2 text-muted" style="font-size: 0.9rem;">
         {{ blog.created_at|date:"d M Y" }}
     </div>
-    
     <div class="row">
         <div class="col-md-3">
             <img src="{{ blog.image.url }}" class="img-fluid">  
@@ -19,3 +19,6 @@
         </div>
     </div>
 </div>
+{% empty %}
+<p>Hiç blog bulunamadı.</p>
+{% endfor %}
