@@ -1,22 +1,210 @@
 {% load i18n %}
+
+<style>
+.filters {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+}
+
+.filters h5 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-item {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.filter-checkbox {
+    display: none;
+}
+
+.filter-label {
+    cursor: pointer;
+    font-size: 16px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.3s ease;
+}
+
+.filter-label:hover {
+    color: #007bff;
+}
+
+/* Özel checkbox tasarımı */
+.custom-checkbox {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    background-color: #fff;
+    position: relative;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.filter-checkbox:checked + .filter-label .custom-checkbox {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.filter-checkbox:checked + .filter-label .custom-checkbox::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -60%) rotate(45deg);
+    width: 6px; /* Tik genişliği */
+    height: 10px; /* Tik uzunluğu */
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+}
+
+
+/* Genel stil */
+.date-filter {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Filtreleme alanının genişliğini sınırla */
+    margin: 0 auto; /* Ortala */
+}
+
+.date-filter h5 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+/* Tarih girişlerinin ve butonun hizalanması */
+.date-filter-row {
+    display: flex;
+    align-items: flex-end; /* Alt hizalama */
+    gap: 10px; /* Elemanlar arası boşluk */
+    flex-wrap: nowrap; /* Aynı satırda kalmalarını sağla */
+    overflow: hidden; /* Taşmaları engelle */
+}
+
+.date-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Genişliklerini otomatik ayarlar */
+    max-width: 150px; /* Giriş kutuları için maksimum genişlik */
+}
+
+.date-group label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.date-group input {
+    padding: 6px; /* Daha küçük padding */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    max-width: 100%; /* Taşmayı engelle */
+    height: 35px; /* Daha kompakt görünüm */
+}
+
+.date-group input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+#filter-button {
+    margin-top: 0; 
+    padding: 6px 10px; /* Daha küçük buton boyutu */
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: 35px; /* Giriş kutuları ile hizala */
+    max-width: 100px; /* Buton genişliğini sınırla */
+}
+
+#filter-button:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+</style>
+
+
+
 <div class="list-group sticky-top" style="top: 20px;">
+    <!-- Kategori filtreleme alanı -->
     <div class="filters">
         <h5>Kategoriler</h5>
-        <ul>
+        <ul class="category-list">
             {% for category in categories %}
-            <li>
+            <li class="category-item">
                 <input 
                     type="checkbox" 
                     class="filter-checkbox" 
                     id="category-{{ category.id }}" 
                     value="{{ category.id }}">
-                <label for="category-{{ category.id }}">{{ category.name }}</label>
+                <label for="category-{{ category.id }}" class="filter-label">
+                    <span class="custom-checkbox"></span>
+                    {{ category.name }}
+                </label>
             </li>
             {% endfor %}
         </ul>
     </div>
+    
 
-    <!-- buraya tarihe göre girmek için html kodu -->
+    <!-- Tarih filtreleme alanı -->
+    <div class="mt-3 date-filter">
+        <h5>Tarih</h5>
+        <div class="date-filter-row">
+            <div class="date-group">
+                <label for="start-date">Başlangıç Tarihi:</label>
+                <input type="date" id="start_date" class="form-control">
+            </div>
+            <div class="date-group">
+                <label for="end-date">Bitiş Tarihi:</label>
+                <input type="date" id="end_date" class="form-control">
+            </div>
+            <button id="filter-button" class="btn btn-primary">Filtrele</button>
+        </div>
+    </div>
+    
+
     <a href="{% url 'add_blog' %}" class="mt-3 btn btn-outline-primary" role="button">{% trans 'Blog Ekle' %}</a>
 </div>
 

@@ -7,13 +7,13 @@
 <div class="container-fluid mt-3">
     <div class="row">
         <div class="col-md-3">
-            {% include 'partials/_categories.html' %}
+            {% include 'partials/_categories.html' %}  
         </div>
-        <div class="col-md-9">
-            <h1>All Blogs</h1>
-            <hr>
+        <div class="col-md-9" id="blog-list">
+            <h1>{% trans "Blogs" %}</h1> 
+            </hr>
             <div id="blog-list">
-                <!-- Blog kartları buraya yüklenecek -->
+                {% include 'blog/partials/_blog.html' with blogs=blogs %}
             </div>
         </div>
     </div>
@@ -23,6 +23,42 @@
 
 {% block js_files %}
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterButton = document.getElementById('filter-button');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        filterButton.addEventListener('click', function () {
+
+            const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked'))
+                .map(checkbox => checkbox.value);
+        
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+
+        
+            fetch('filter-blogs/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': "{{csrf_token}}",
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    categories: selectedCategories,
+                    start_date: startDate,
+                    end_date: endDate,
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('blog-list').innerHTML = data.html;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+</script>
+{% endblock %}
+
+
+<!-- <script>
 
     const checkboxes = document.querySelectorAll('.filter-checkbox');
     const blogList = document.getElementById('blog-list');
@@ -51,5 +87,4 @@
         blogList.innerHTML = data.html; // Tüm blogları yükle
     })
     .catch(error => console.error('Error:', error));
-</script>
-{% endblock %}
+</script> -->

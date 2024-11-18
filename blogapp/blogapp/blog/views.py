@@ -20,6 +20,8 @@ from .models import Blog, Category, Comment
 
 
 def index(request):
+    Blog.objects.all()
+
     context = {
         "blogs": Blog.objects.filter(is_active=True),
         "categories": Category.objects.all()
@@ -39,16 +41,13 @@ def comments_view(request, slug):
 
 @login_required
 def blog(request):
-    blogs_list = Blog.objects.filter(is_active=True)  
-    paginator = Paginator(blogs_list, 200)  
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
+    blogs_list = Blog.objects.filter(is_active=True) 
     context = {
-        "page_obj": page_obj,  
+        "blogs": blogs_list,  
         "categories": Category.objects.all(),
     }
     return render(request, "blog/blogs.html", context)
+
 
 @login_required
 @blog_is_active_required
@@ -81,27 +80,43 @@ def blog_details(request, slug):
     return render(request, "blog/blog-details.html", context)
 
 
+
 @login_required
 def filter_blogs(request):
-    blogs = Blog.objects.all()
+    if request.method == 'POST':
 
-    selected_categories = request.GET.getlist('categories[]')
+        import json
+        test = json.loads(request.body.decode('utf-8'))
 
-    if selected_categories:
-        if isinstance(selected_categories[0], str) and ',' in selected_categories[0]:
-            selected_categories = selected_categories[0].split(',')
-        
-        selected_categories = [int(category_id) for category_id in selected_categories if category_id.isdigit()]
+        test['categories']
+        print(test['categories']) # kategoriid alıyorum burada ['2','3'] gibi list geliyor.
+        print(test['start_date']) # start_date alıyorum 2024-11-12 gibi bir değer geliyor.
+        print(test['end_date'])   # end_date alıyorum 2024-11-14 gibi bir değer geliyor. 
+
+        selected_categories = test.get('categories', [])
+        start_date = test.get('start_date', None)
+        end_date = test.get('end_date', None)
+
+
+        blogs = Blog.objects.filter(is_active=True)  
+        # selected_categories = request.POST.get(test['categories']
+
 
         if selected_categories:
             blogs = blogs.filter(category__id__in=selected_categories)
 
-    elif not selected_categories:
-        blogs = Blog.objects.all()
 
-    # HTML içeriğini render et ve JSON ile döndür
-    html = render_to_string('blog/partials/_blog.html', {'blogs': blogs}, request=request)
-    return JsonResponse({'html': html})
+        if start_date:
+            blogs = blogs.filter(created_at__gte=start_date)
+        if end_date:
+            blogs = blogs.filter(created_at__lte=end_date)
+
+        # HTML render + JSON dönüşü
+        html = render_to_string('blog/partials/_blog.html', {'blogs': blogs}, request=request)
+        return JsonResponse({'html': html})
+    else:
+        return JsonResponse({'error': 'Invalid request mehtod'}, status =400)
+
 
 
 
