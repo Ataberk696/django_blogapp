@@ -86,22 +86,19 @@ def filter_blogs(request):
     if request.method == 'POST':
 
         import json
-        test = json.loads(request.body.decode('utf-8'))
+        data = json.loads(request.body.decode('utf-8'))
 
-        test['categories']
-        print(test['categories']) # kategoriid alıyorum burada ['2','3'] gibi list geliyor.
-        print(test['start_date']) # start_date alıyorum 2024-11-12 gibi bir değer geliyor.
-        print(test['end_date'])   # end_date alıyorum 2024-11-14 gibi bir değer geliyor. 
+        data['categories']
+        print(data['categories']) # kategoriid alıyorum burada ['2','3'] gibi list geliyor.
+        print(data['start_date']) # start_date alıyorum 2024-11-12 gibi bir değer geliyor.
+        print(data['end_date'])   # end_date alıyorum 2024-11-14 gibi bir değer geliyor. 
 
-        selected_categories = test.get('categories', [])
-        start_date = test.get('start_date', None)
-        end_date = test.get('end_date', None)
-
+        selected_categories = data.get('categories', [])
+        start_date = data.get('start_date', None)
+        end_date = data.get('end_date', None)
+        search_query = data.get('search_query','').strip()
 
         blogs = Blog.objects.filter(is_active=True)  
-        # selected_categories = request.POST.get(test['categories']
-
-
         if selected_categories:
             blogs = blogs.filter(category__id__in=selected_categories)
 
@@ -110,6 +107,9 @@ def filter_blogs(request):
             blogs = blogs.filter(created_at__gte=start_date)
         if end_date:
             blogs = blogs.filter(created_at__lte=end_date)
+
+        if search_query:
+            blogs = blogs.filter(title__icontains=search_query)
 
         # HTML render + JSON dönüşü
         html = render_to_string('blog/partials/_blog.html', {'blogs': blogs}, request=request)

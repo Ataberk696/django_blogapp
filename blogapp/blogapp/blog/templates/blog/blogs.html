@@ -10,8 +10,11 @@
             {% include 'partials/_categories.html' %}  
         </div>
         <div class="col-md-9" id="blog-list">
-            <h1>{% trans "Blogs" %}</h1> 
-            </hr>
+            <div class="d-flex justify-content-between">
+                <h1>{% trans "Blogs" %}</h1> 
+                </hr>
+            </div>
+
             <div id="blog-list">
                 {% include 'blog/partials/_blog.html' with blogs=blogs %}
             </div>
@@ -23,43 +26,88 @@
 
 {% block js_files %}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const filterButton = document.getElementById('filter-button');
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        filterButton.addEventListener('click', function () {
 
-            const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked'))
-                .map(checkbox => checkbox.value);
-        
-            const startDate = document.getElementById('start_date').value;
-            const endDate = document.getElementById('end_date').value;
+// filtreleme işlevini yapan temel fonksiyon
+function fetchBlogs(selectedCategories, startDate, endDate, searchQuery) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-        
-            fetch('filter-blogs/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': "{{csrf_token}}",
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    categories: selectedCategories,
-                    start_date: startDate,
-                    end_date: endDate,
-                }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('blog-list').innerHTML = data.html;
-                })
-                .catch(error => console.error('Error:', error));
-        });
+    fetch('filter-blogs/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            categories: selectedCategories,
+            start_date: startDate,
+            end_date: endDate,
+            search_query: searchQuery,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('blog-list').innerHTML = data.html;
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+// qselectorall ile işaretlileri alır.
+function filterByCategory() {
+    const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked'))
+        .map(checkbox => checkbox.value);
+
+    const startDate = document.getElementById('start_date').value;
+    const endDate = document.getElementById('end_date').value;
+    const searchQuery = document.getElementById('search-input').value;
+
+    fetchBlogs(selectedCategories, startDate, endDate, searchQuery);
+}
+
+function filterByDate() {
+    const startDate = document.getElementById('start_date').value;
+    const endDate = document.getElementById('end_date').value;
+
+    const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked'))
+        .map(checkbox => checkbox.value);
+    const searchQuery = document.getElementById('search-input').value;
+
+    fetchBlogs(selectedCategories, startDate, endDate, searchQuery);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    // kategoriye göre filtreleme 
+    const categoryCheckboxes = document.querySelectorAll('.filter-checkbox');
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', filterByCategory);
     });
+
+    // Tarihe göre filtreleme
+    const filterButton = document.getElementById('filter-button');
+    filterButton.addEventListener('click', filterByDate);
+    
+    // blog arama
+    const searchForm = document.getElementById('search-form');
+    searchForm.addEventListener('focusout',function(e) {
+        e.preventDefault();
+        const searchQuery = document.getElementById('search-input').value;
+    
+
+        const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked'))
+                .map(checkbox => checkbox.value);
+
+        const startDate = document.getElementById('start_date').value;
+        const endDate = document.getElementById('end_date').value;
+        fetchBlogs(selectedCategories, startDate, endDate, searchQuery);
+    });
+});
 </script>
 {% endblock %}
 
 
-<!-- <script>
 
+
+<!-- <script>
     const checkboxes = document.querySelectorAll('.filter-checkbox');
     const blogList = document.getElementById('blog-list');
 

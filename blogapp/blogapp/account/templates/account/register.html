@@ -10,47 +10,69 @@
 
 {% block content %}
 
-<div class="container-fluid mt-3">
-    <h1>{% trans "Kayıt Ol" %} </h1>
-    <hr>
-    <form method="POST">
-        {% csrf_token %}
-        {% if error %}
-            <div class="alert alert-danger">
-                {{error}}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    
+                    <h2 class="text-center mb-4">{% trans "Kayıt Ol" %}</h2>
+                    <hr>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        
+                        {% if error %}
+                            <div class="alert alert-danger text-center">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">{% trans "Kullanıcı Adı" %}</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ username }}" placeholder="{% trans 'Kullanıcı adınızı giriniz' %}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label">{% trans "E-posta" %}</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ email }}" placeholder="{% trans 'E-posta adresinizi giriniz' %}">
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="firstname" class="form-label">{% trans "Ad" %}</label>
+                                <input type="text" class="form-control" id="firstname" name="firstname" value="{{ firstname }}" placeholder="{% trans 'Adınızı giriniz' %}">
+                            </div>
+                            <div class="col">
+                                <label for="lastname" class="form-label">{% trans "Soyad" %}</label>
+                                <input type="text" class="form-control" id="lastname" name="lastname" value="{{ lastname }}" placeholder="{% trans 'Soyadınızı giriniz' %}">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="password" class="form-label">{% trans "Şifre" %}</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="{% trans 'Şifrenizi giriniz' %}">
+                            </div>
+                            <div class="col">
+                                <label for="repassword" class="form-label">{% trans "Şifre Tekrar Yazın" %}</label>
+                                <input type="password" class="form-control" id="repassword" name="repassword" placeholder="{% trans 'Şifrenizi tekrar giriniz' %}">
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">{% trans "Kayıt Ol" %}</button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <p class="mb-0">{% trans "Zaten bir hesabınız var mı?" %} <a href="{% url 'login' %}" class="text-decoration-none text-primary">{% trans "Giriş Yap" %}</a></p>
+                        </div>
+                    </form>
+                </div>
             </div>
-        {% endif %}
-        <div class="mb-3">
-            <label for="username" class="form-label">{% trans "Kullanıcı Adı" %}</label>
-            <input type="text" class="form-control" name="username" value="{{ username }}">
         </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">{% trans "E-posta" %}</label>
-            <input type="email" class="form-control" name="email" value="{{ email }}">
-        </div>
-        <div class="row mb-3">
-            <div class="col"> 
-                <label for="firstname" class="form-label">{% trans "Ad" %}</label>
-                <input type="firstname" class="form-control" name="firstname" value="{{ firstname }}">
-            </div>
-            <div class="col">
-                <label for="lastname" class="form-label">{% trans "Soyad" %}</label>
-                <input type="lastname" class="form-control" name="lastname" value="{{ lastname }}">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col"> 
-                <label for="password" class="form-label">{% trans "Şifre" %}</label>
-                <input type="password" class="form-control" name="password" value="{{ password }}">
-            </div>
-            <div class="col">
-                <label for="repassword" class="form-label">{% trans "Şifre Tekrar Yazın" %}</label>
-                <input type="password" class="form-control" name="repassword" value="{{ repassword }}">
-            </div>
-        </div>
-        <div class="mb-3"></div>
-        <input type="submit" value="Register" class="btn btn-primary">
-    </form>
+    </div>
 </div>
 
 {% endblock %}

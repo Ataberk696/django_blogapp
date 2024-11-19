@@ -10,28 +10,41 @@
 
 {% block content %}
 
-<div class="container-fluid mt-3">
-    
-    <div class="col">
-        <h1>{% trans "Giriş Yap" %}</h1>
-        <hr>
-        <form method="POST">
-            {% csrf_token %}
-            {% include 'partials/msg.html' %}
-
-            <div class="mb-3">
-                <label for="username" class="form-label">{% trans "Kullanıcı Adı" %}</label>
-                <input type="text" class="form-control" name="username">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">{% trans "Giriş Yap" %}</h2>
+                    <hr>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% include 'partials/msg.html' %}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">{% trans "Kullanıcı Adı" %}</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="{% trans 'Kullanıcı adınızı giriniz' %}">
+                        </div>
+                                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">{% trans "Şifre" %}</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="{% trans 'Şifrenizi giriniz' %}">
+                        </div>
+                                         
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">{% trans "Giriş Yap" %}</button>
+                        </div>
+                    
+                        <div class="text-center mt-3">
+                            <p class="mb-0">{% trans "Hesabınız yok mu?" %} <a href="{% url 'register' %}" class="text-decoration-none text-primary">{% trans "Kayıt Olun" %}</a></p>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">{% trans "Şifre" %}</label>
-                <input type="password" class="form-control" name="password">
-            </div>
-            <div class="mb-3"></div>
-            <input type="submit" value="Login" class="btn btn-primary">
-        </form>
+        </div>
     </div>
 </div>
+
 
 {% endblock %}
 
