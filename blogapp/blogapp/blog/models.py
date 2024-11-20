@@ -27,7 +27,7 @@ class Blog(models.Model):
     image = models.ImageField(upload_to="blogs", null=True, blank=True)
     description = RichTextField()
     is_active = models.BooleanField(default=False)
-    slug = models.SlugField(null=False, blank=True, unique=True, db_index=True, editable=False)
+    slug = models.SlugField(null=True, blank=True, unique=True, db_index=True, editable=False)
     category = models.ForeignKey(Category, default=1, on_delete=models.CASCADE)
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=1) 
     created_at = models.DateTimeField(auto_now_add=True, null=True)

@@ -3,20 +3,73 @@ from blogapp.decorators import login_required , blog_is_active_required
 from .forms import BlogForm,  CommentForm
 from blog.models import Blog, Category
 from django.contrib import messages
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .models import Blog, Category, Comment
 
-# from django.http import JsonResponse
-# from django.views.decorators.http import require_GET
 
-# @require_GET
-# def ajax_test_view(request):
-#     data = {'message': 'AJAX çalışıyor!'}
-#     return JsonResponse(data)
+@login_required
+def load_filtered_blogs(request):
+    if request.method == 'POST':
+        import json
+        data = json.loads(request.body.decode('utf-8'))
 
-# Create your views here.
+        selected_categories = data.get('categories', [])
+        start_date = data.get('start_date', None)
+        end_date = data.get('end_date', None)
+        search_query = data.get('search_query','').strip()
+        page = int(data.get('page',1))
+
+        blogs = Blog.objects.filter(is_active=True)
+
+        if selected_categories:
+            blogs = blogs.filter(category__id__in=selected_categories)
+        if start_date:
+            blogs = blogs.filter(created_at__gte=start_date)
+        if end_date:
+            blogs = blogs.filter(created_at__lte=end_date)
+        if search_query:
+            blogs = blogs.filter(title__icontains=search_query)
+
+        paginator = Paginator(blogs.order_by('-created_at'),10)
+        try:
+            blogs_page = paginator.page(page)
+        except EmptyPage:
+            return JsonResponse({'blogs': None})
+        
+
+        blogs_html = render_to_string('blog/partials/_blog.html',{'blogs': blogs_page}, request=request)
+        return JsonResponse({'blogs': blogs_html})
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@login_required
+def blog(request):
+    blogs_list = Blog.objects.filter(is_active=True).order_by('-created_at')[0:10]
+    context = {
+        "blogs": blogs_list,  
+        "categories": Category.objects.all(),
+    }
+    return render(request, "blog/blogs.html", context)
+
+
+
+# def load_more_blogs(request):
+#     if request.method == "GET":
+#         page = request.GET.get('page', 1)  # Gelen sayfa numarasını al
+#         blogs = Blog.objects.filter(is_active=True).order_by('-created_at')  # Blogları sıralı getir
+
+#         paginator = Paginator(blogs, 10)  # sayfada 10 adet
+
+#         try:
+#             blogs_page = paginator.page(page)  # İlgili sayfanın bloglarını getir
+#         except EmptyPage:
+#             return JsonResponse({'blogs': None}) 
+
+#         blogs_html = render_to_string('blog/partials/_blog.html', {'blogs': blogs_page}, request=request)
+#         return JsonResponse({'blogs': blogs_html})
+#     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
 def index(request):
@@ -39,14 +92,9 @@ def comments_view(request, slug):
     comments_html = render_to_string('blog/partials/comments_list.html', {'page_obj': page_obj})
     return JsonResponse({'comments': comments_html})
 
-@login_required
-def blog(request):
-    blogs_list = Blog.objects.filter(is_active=True) 
-    context = {
-        "blogs": blogs_list,  
-        "categories": Category.objects.all(),
-    }
-    return render(request, "blog/blogs.html", context)
+
+
+
 
 
 @login_required
@@ -81,46 +129,42 @@ def blog_details(request, slug):
 
 
 
-@login_required
-def filter_blogs(request):
-    if request.method == 'POST':
+# @login_required
+# def filter_blogs(request):
+#     if request.method == 'POST':
 
-        import json
-        data = json.loads(request.body.decode('utf-8'))
+#         import json
+#         data = json.loads(request.body.decode('utf-8'))
 
-        data['categories']
-        print(data['categories']) # kategoriid alıyorum burada ['2','3'] gibi list geliyor.
-        print(data['start_date']) # start_date alıyorum 2024-11-12 gibi bir değer geliyor.
-        print(data['end_date'])   # end_date alıyorum 2024-11-14 gibi bir değer geliyor. 
+#         data['categories']
+#         print(data['categories']) # kategoriid alıyorum burada ['2','3'] gibi list geliyor.
+#         print(data['start_date']) # start_date alıyorum 2024-11-12 gibi bir değer geliyor.
+#         print(data['end_date'])   # end_date alıyorum 2024-11-14 gibi bir değer geliyor. 
+#         print(data['search_query'])
 
-        selected_categories = data.get('categories', [])
-        start_date = data.get('start_date', None)
-        end_date = data.get('end_date', None)
-        search_query = data.get('search_query','').strip()
+#         selected_categories = data.get('categories', [])
+#         start_date = data.get('start_date', None)
+#         end_date = data.get('end_date', None)
+#         search_query = data.get('search_query','').strip()
 
-        blogs = Blog.objects.filter(is_active=True)  
-        if selected_categories:
-            blogs = blogs.filter(category__id__in=selected_categories)
-
-
-        if start_date:
-            blogs = blogs.filter(created_at__gte=start_date)
-        if end_date:
-            blogs = blogs.filter(created_at__lte=end_date)
-
-        if search_query:
-            blogs = blogs.filter(title__icontains=search_query)
-
-        # HTML render + JSON dönüşü
-        html = render_to_string('blog/partials/_blog.html', {'blogs': blogs}, request=request)
-        return JsonResponse({'html': html})
-    else:
-        return JsonResponse({'error': 'Invalid request mehtod'}, status =400)
+#         blogs = Blog.objects.filter(is_active=True)
+#         if selected_categories:
+#             blogs = blogs.filter(category__id__in=selected_categories)
 
 
+#         if start_date:
+#             blogs = blogs.filter(created_at__gte=start_date)
+#         if end_date:
+#             blogs = blogs.filter(created_at__lte=end_date)
 
+#         if search_query:
+#             blogs = blogs.filter(title__icontains=search_query)
 
-
+#         # HTML render + JSON dönüşü
+#         html = render_to_string('blog/partials/_blog.html', {'blogs': blogs}, request=request)
+#         return JsonResponse({'html': html})
+#     else:
+#         return JsonResponse({'error': 'Invalid request mehtod'}, status =400)
 
 
 
