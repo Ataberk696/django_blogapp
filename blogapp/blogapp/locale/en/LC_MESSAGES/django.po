@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-18 15:50+0300\n"
+"POT-Creation-Date: 2024-11-21 15:57+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -193,7 +193,7 @@ msgid "Yeni Blog"
 msgstr "New Blog"
 
 #: .\blog\templates\blog\add_blog.html:16
-#: .\templates\partials\_categories.html:210
+#: .\templates\partials\_categories.html:229
 msgid "Blog Ekle"
 msgstr "Add Blog"
 
@@ -239,27 +239,19 @@ msgstr "Page"
 msgid "Sonraki »"
 msgstr "Next »"
 
-#: .\templates\partials\_categories.html:173
-msgid "Arama"
-msgstr "Search"
-
-#: .\templates\partials\_categories.html:181
-msgid "Başlangıç Tarihi:"
-msgstr "Start date:"
-
-#: .\templates\partials\_categories.html:185
-msgid "Bitiş Tarihi:"
-msgstr "End date:"
-
-#: .\templates\partials\_categories.html:188
-msgid "Filtrele"
-msgstr "filter"
-
-#: .\templates\partials\_categories.html:193
+#: .\templates\partials\_categories.html:200
 #, fuzzy
 #| msgid "Categories"
 msgid "Kategoriler"
 msgstr "Categories"
+
+#: .\templates\partials\_categories.html:219
+msgid "Tarih Aralığı:"
+msgstr "Date Range:"
+
+#: .\templates\partials\_categories.html:222
+msgid "Filtrele"
+msgstr "filter"
 
 #: .\templates\partials\_navbar.html:48
 msgid "Bloglar"
@@ -280,6 +272,15 @@ msgstr "Welcome"
 #: .\templates\partials\_navbar.html:67
 msgid "Kayıt ol"
 msgstr "Register"
+
+#~ msgid "Arama"
+#~ msgstr "Search"
+
+#~ msgid "Başlangıç Tarihi:"
+#~ msgstr "Start date:"
+
+#~ msgid "Bitiş Tarihi:"
+#~ msgstr "End date:"
 
 #~ msgid "Blog Bulunamadı"
 #~ msgstr "Blog Not Found"

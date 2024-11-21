@@ -30,7 +30,17 @@
 
 {% block js_files %}
 <script>
-
+document.addEventListener("DOMContentLoaded", function () {
+    // Flatpickr'i initialize ediyoruz
+    flatpickr("#date_range", {
+        mode: "range", // Aralık modu
+        dateFormat: "Y-m-d", // Tarih formatı
+        onChange: function(selectedDates, dateStr, instance) {
+            // Seçilen tarih aralığı bu fonksiyonda yakalanır
+            console.log("Seçilen tarih aralığı:", dateStr);
+        },
+    });
+});
 
 // filtreleme işlevini yapan temel fonksiyon
 function fetchBlogs(selectedCategories, startDate, endDate, searchQuery, page) {
@@ -59,12 +69,22 @@ let is_loading = false
 
 function applyFilters() {
     const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(checkbox => checkbox.value);
-    const start_date = document.getElementById('start_date').value;
-    const end_date = document.getElementById('end_date').value;
+
+
+    const dateRange = document.getElementById('date_range').value; // "2024-11-01 to 2024-11-10" formatında
+    let start_date = null, end_date = null;
+
+    if (dateRange) {
+        const dates = dateRange.split(" to ");
+        start_date = dates[0].trim(); // Başlangıç tarihi (trim ile boşluklar temizleniyor)
+        end_date = dates[1]?.trim(); // Bitiş tarihi (?. ile null kontrolü)
+    }
+
     const searchQuery = document.getElementById('search-input').value;
 
-    currentPage = 1; // sayfa sıfırla
-    is_loading = false; // Sonsuz kaydırmayı tekrar etkinleştir
+    currentPage = 1; 
+    is_loading = false; 
+
 
     fetchBlogs(selectedCategories, start_date, end_date, searchQuery, currentPage)
         .then(data => {
@@ -84,91 +104,49 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterButton = document.getElementById('filter-button');
     if (filterButton) {
         filterButton.addEventListener('click', applyFilters); // Butona tıklayınca filtrele
+        
     }
 
     const searchInput = document.getElementById('search-input');
     if (searchInput) {
         searchInput.addEventListener('focusout', applyFilters); // Arama kutusu odaktan çıkınca filtrele
     }
+});
 
-    // Sonsuz kaydırma
-    window.addEventListener('scroll', function() {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500 && !is_loading) {
-            is_loading = true; // Aynı anda birden fazla istek önlemek için
 
-            const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(checkbox => checkbox.value);
-            const start_date = document.getElementById('start_date').value;
-            const end_date = document.getElementById('end_date').value;
-            const searchQuery = document.getElementById('search-input').value;
+// Sonsuz kaydırma fonksiyonunu güncelle
+window.addEventListener('scroll', function() {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500 && !is_loading) {
+        is_loading = true; // Aynı anda birden fazla istek önlemek için
 
-            currentPage++;
-            fetchBlogs(selectedCategories, start_date, end_date, searchQuery, currentPage)
-                .then(data => {
-                    if (data.blogs) {
-                        const blogList = document.getElementById('blog-list');
-                        blogList.insertAdjacentHTML('beforeend', data.blogs);
-                        is_loading = false;
-                    } else {
-                        is_loading = true; // Blog yoksa kaydırmayı durdur
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+        const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(checkbox => checkbox.value);
+        const dateRange = document.getElementById('date_range').value; // Tek input
+        let start_date = null, end_date = null;
+
+        if (dateRange) {
+            const dates = dateRange.split(" to ");
+            start_date = dates[0];
+            end_date = dates[1];
         }
-    });
+
+        const searchQuery = document.getElementById('search-input').value;
+
+        currentPage++;
+        fetchBlogs(selectedCategories, start_date, end_date, searchQuery, currentPage)
+            .then(data => {
+                if (data.blogs) {
+                    const blogList = document.getElementById('blog-list');
+                    blogList.insertAdjacentHTML('beforeend', data.blogs);
+                    is_loading = false;
+                } else {
+                    is_loading = true; // Blog yoksa kaydırmayı durdur
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 });
 
 </script>
 {% endblock %}
 
-
-
-<!-- // // qselectorall ile işaretlileri alır.
-// function filterByCategory() {
-//     const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked'))
-//         .map(checkbox => checkbox.value);
-
-//     const startDate = document.getElementById('start_date').value;
-//     const endDate = document.getElementById('end_date').value;
-//     const searchQuery = document.getElementById('search-input').value;
-
-//     fetchBlogs(selectedCategories, startDate, endDate, searchQuery);
-// }
-
-// function filterByDate() {
-//     const startDate = document.getElementById('start_date').value;
-//     const endDate = document.getElementById('end_date').value;
-
-//     const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked'))
-//         .map(checkbox => checkbox.value);
-//     const searchQuery = document.getElementById('search-input').value;
-
-//     fetchBlogs(selectedCategories, startDate, endDate, searchQuery);
-// }
-
-// document.addEventListener('DOMContentLoaded', function () {
-//     // kategoriye göre filtreleme 
-//     const categoryCheckboxes = document.querySelectorAll('.filter-checkbox');
-//     categoryCheckboxes.forEach(checkbox => {
-//         checkbox.addEventListener('change', filterByCategory);
-//     });
-
-//     // Tarihe göre filtreleme
-//     const filterButton = document.getElementById('filter-button');
-//     filterButton.addEventListener('click', filterByDate);
-    
-//     // blog arama
-//     const searchForm = document.getElementById('search-form');
-//     searchForm.addEventListener('focusout', function(e) {
-//         e.preventDefault();
-//         const searchQuery = document.getElementById('search-input').value;
-    
-//         const selectedCategories = Array.from(document.querySelectorAll('.filter-checkbox:checked'))
-//             .map(checkbox => checkbox.value);
-
-//         const startDate = document.getElementById('start_date').value;
-//         const endDate = document.getElementById('end_date').value;
-//         fetchBlogs(selectedCategories, startDate, endDate, searchQuery);
-//     });
-
-// }); -->
 

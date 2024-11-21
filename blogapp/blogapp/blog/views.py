@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from blogapp.decorators import login_required , blog_is_active_required
 from .forms import BlogForm,  CommentForm
@@ -7,6 +8,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .models import Blog, Category, Comment
+from django.utils import timezone
 
 
 @login_required
@@ -20,6 +22,20 @@ def load_filtered_blogs(request):
         end_date = data.get('end_date', None)
         search_query = data.get('search_query','').strip()
         page = int(data.get('page',1))
+
+        try:
+            if start_date:
+                start_date = timezone.make_aware(
+                    datetime.strptime(start_date.strip(), '%Y-%m-%d'),
+                    timezone.get_current_timezone()
+                )
+            if end_date:
+                end_date = timezone.make_aware(
+                    datetime.strptime(end_date.strip(), '%Y-%m-%d'),
+                    timezone.get_current_timezone()
+                )
+        except ValueError:
+            return JsonResponse({'error': 'Invalid date format'}, status=400)
 
         blogs = Blog.objects.filter(is_active=True)
 
@@ -63,6 +79,7 @@ def index(request):
     }
     return render(request, "blog/index.html", context)
 
+
 def comments_view(request, slug):
     blog = get_object_or_404(Blog, slug=slug)
     comments = blog.comments.all()
@@ -104,7 +121,6 @@ def blog_details(request, slug):
         'comment_form': comment_form
     }
     return render(request, "blog/blog-details.html", context)
-
 
 
 @login_required

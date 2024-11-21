@@ -1,21 +1,23 @@
 {% load i18n %}
 
 <style>
+.ui-datepicker {
+    z-index: 9999; /* Takvimin üstte görünmesi için */
+}
+
 /* Genel Ayarlar */
 .filters, .date-filter, #search-form {
-    font-family: 'Arial', sans-serif;
     background-color: #ffffff;
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    width: 100%; /* Tüm elemanların genişliğini tam yap */
+    width: 100%; /* Tüm elemanlar genişlik açısından uyumlu */
 }
 
 /* Başlıklar */
 .filters h5, .date-filter h5 {
     font-size: 16px;
-    color: #444;
     margin-bottom: 10px;
     font-weight: 600;
     border-bottom: 2px solid #f0f0f0;
@@ -38,17 +40,17 @@
 }
 
 .filter-checkbox {
-    display: none;
+    display: none; /* Varsayılan checkbox gizlendi */
 }
 
 .filter-label {
     cursor: pointer;
     font-size: 14px;
-    color: #555;
     display: flex;
     align-items: center;
     gap: 10px;
-    transition: all 0.3s ease;
+    color: #555;
+    transition: color 0.3s ease;
 }
 
 .filter-label:hover {
@@ -87,19 +89,20 @@
 /* Tarih Alanı */
 .date-filter-row {
     display: flex;
-    gap: 15px;
-    align-items: flex-end;
-    flex-wrap: wrap;
+    gap: 10px;
+    align-items: end;
 }
 
+
+
 .date-group {
-    flex: 1;
-    max-width: 160px;
+    display: flex;
+    flex-direction: column; /* Label ve input dikeyde hizalanır */
+    gap: 5px; /* Label ve input arasında boşluk */
 }
 
 .date-group label {
     font-size: 13px;
-    margin-bottom: 5px;
     color: #666;
 }
 
@@ -108,8 +111,8 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 14px;
-    transition: border-color 0.3s ease;
     width: 100%;
+    transition: border-color 0.3s ease;
 }
 
 .date-group input:focus {
@@ -117,16 +120,21 @@
     outline: none;
 }
 
-/* Filtre Butonu */
-#filter-button {
+#filter-button{
     padding: 8px 12px;
     font-size: 13px;
-    background-color: #007bff;
-    color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    display: inline-block; /* Dikey hizalamada sorun oluşmaması için */
+    height: 38px; /* Input ile aynı yükseklikte yapılır */
+    line-height: 1; /* Yüksekliği optimize eder */
+}
+
+#filter-button {
+    background-color: #007bff;
+    color: #fff;
 }
 
 #filter-button:hover {
@@ -145,16 +153,17 @@
 #search-form button {
     padding: 8px 12px;
     font-size: 13px;
-    border: 1px solid #28a745;
-    background-color: #28a745;
+    border: none;
+    background-color: #dc3545;
     color: #fff;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-left: 10px;
 }
 
 #search-form button:hover {
-    background-color: #218838;
+    background-color: #c82333;
 }
 
 /* Blog Ekle Butonu */
@@ -174,6 +183,7 @@
     background-color: #007bff;
     color: #fff;
 }
+
 </style>
 
 
@@ -182,23 +192,8 @@
     <!-- Arama Alanı -->
     <form id="search-form" class="d-flex mb-3" role="search">
         <input id="search-input" type="search" placeholder="Search" aria-label="Search">
+        <button id="clear-filters-button"> <a href="{% url 'blogs' %}"> </a>Filtreleri kaldır</button>
     </form>
-
-    <!-- Tarih Filtreleme -->
-    <div class="date-filter">
-        <h5>Tarih</h5>
-        <div class="date-filter-row">
-            <div class="date-group">
-                <label for="start_date">{% trans 'Başlangıç Tarihi:' %}</label>
-                <input type="date" id="start_date">
-            </div>
-            <div class="date-group">
-                <label for="end_date">{% trans 'Bitiş Tarihi:' %}</label>
-                <input type="date" id="end_date">
-            </div>
-            <button id="filter-button">{% trans 'Filtrele' %}</button>
-        </div>
-    </div>
 
     <!-- Kategori Filtreleme -->
     <div class="filters">
@@ -215,6 +210,20 @@
             {% endfor %}
         </ul>
     </div>
+
+    <!-- Tarih Filtreleme -->
+    <div class="date-filter">
+        <h5>Tarih</h5>
+        <div class="date-filter-row">
+            <div class="date-group">
+                <label for="date_range">{% trans 'Tarih Aralığı:' %}</label>
+                <input type="text" id="date_range" placeholder="YYYY-MM-DD - YYYY-MM-DD">
+            </div>
+            <button id="filter-button">{% trans 'Filtrele' %}</button>
+        </div>
+    </div>
+
+
 
     <!-- Blog Ekle -->
     <a href="{% url 'add_blog' %}" class="btn btn-outline-primary">{% trans 'Blog Ekle' %}</a>
