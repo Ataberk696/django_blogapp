@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from blogapp.decorators import login_required , blog_is_active_required
 from .forms import BlogForm,  CommentForm
@@ -8,13 +7,14 @@ from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .models import Blog, Category, Comment
+from datetime import datetime
 from django.utils import timezone
+import json
 
 
 @login_required
 def load_filtered_blogs(request):
     if request.method == 'POST':
-        import json
         data = json.loads(request.body.decode('utf-8'))
 
         selected_categories = data.get('categories', [])

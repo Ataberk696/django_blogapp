@@ -192,7 +192,7 @@
     <!-- Arama Alanı -->
     <form id="search-form" class="d-flex mb-3" role="search">
         <input id="search-input" type="search" placeholder="Search" aria-label="Search">
-        <button id="clear-filters-button"> <a href="{% url 'blogs' %}"> </a>Filtreleri kaldır</button>
+        <button id="clear-filters-button"> <a href="{% url 'blogs' %}"> </a>{% trans 'Filtreleri kaldır' %}</button>
     </form>
 
     <!-- Kategori Filtreleme -->
@@ -211,13 +211,15 @@
         </ul>
     </div>
 
+    
+
     <!-- Tarih Filtreleme -->
     <div class="date-filter">
-        <h5>Tarih</h5>
+        <h5>{% trans 'Tarih' %}</h5>
         <div class="date-filter-row">
             <div class="date-group">
                 <label for="date_range">{% trans 'Tarih Aralığı:' %}</label>
-                <input type="text" id="date_range" placeholder="YYYY-MM-DD - YYYY-MM-DD">
+                <input type="text" id="date_range" placeholder="{% trans 'YYYY-MM-DD - YYYY-MM-DD' %}">
             </div>
             <button id="filter-button">{% trans 'Filtrele' %}</button>
         </div>
